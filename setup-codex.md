@@ -1,113 +1,98 @@
 # Setup Codex
 
-> Configurazione completa di Codex CLI.
+Codex è il banco da lavoro del codice: aprilo nel repository, dagli confini precisi, lascia che ispezioni prima di modificare e verifica il diff.
 
----
+## Installazione e autenticazione
 
-## Installazione
+Le opzioni CLI sono versionate: usa la documentazione della versione installata, non flag ricordati da un vecchio appunto.
 
 ```bash
-which codex
-# /home/clawy/.local/bin/codex
-
+# WHY: conferma il binario effettivamente usato e la sua versione.
+command -v codex
 codex --version
-# codex-cli 0.146.1
-```
+codex --help
 
----
-
-## Auth
-
-### OAuth (consigliato)
-
-```bash
+# WHY: il login interattivo evita di scrivere token nei prompt o nella shell history.
 codex login
-# Apre browser, effettua login con OpenAI
 ```
 
-### API Key (alternativa)
+## Apri dal repo, non dalla home
 
 ```bash
-export OPENAI_API_KEY="sk-..."
-echo 'export OPENAI_API_KEY="sk-..."' >> ~/.bashrc
+# WHY: il workspace determina i file leggibili/scrivibili e rende il diff pertinente.
+cd /home/clawy/dev/sth-assitec-gpt
+git status --short
+codex
 ```
 
----
+> [!DANGER] Non avviare con permessi pieni per comodità. Per un audit usa sola lettura; per una patch usa `workspace-write`; rete e comandi distruttivi restano soggetti ad approvazione.
 
-## Comandi Base
-
-```bash
-# One-shot
-cd ~/dev/progetto
-codex exec --sandbox workspace-write "Descrivi questo progetto"
-
-# Con contesto
-codex exec --context CODEX-CONTEXT.md "Converti file X"
-
-# Background (task lunghi >5 min)
-codex exec --sandbox workspace-write "Refactor modulo auth" --background
-```
-
----
-
-## Sandbox Modes
-
-| Flag | Effetto | Quando usarla |
-|------|---------|---------------|
-| `--sandbox workspace-write` | Auto-approva modifiche nel workspace | **Consigliato** per la maggior parte dei task |
-| `--dangerously-bypass-approvals-and-sandbox` | No sandbox, no approvals | Task che richiedono accesso host (pericoloso) |
-| `--sandbox danger-full-access` | No sandbox, host access | Quando bubblewrap fallisce |
-
----
-
-## Context File (`CODEX-CONTEXT.md`)
-
-File che Codex legge all'inizio per capire il progetto:
+## `AGENTS.md` per STH
 
 ```markdown
-# CODEX-CONTEXT.md
+# AGENTS.md
 
-## Setup
-- Path: /path/to/project
-- Stack: [linguaggi]
+## Missione
+Lavora su STH Assitec preservando il comportamento legacy e le convenzioni locali.
 
-## Conventions
-- Bootstrap: require_once...
-- DB: plural tables, ID PK, IS_* flags
-- Forms: $CRUD->Form(), ParametriForm
+## Prima di modificare
+- Leggi il file target e un reference corretto dello stesso modulo.
+- Esegui `git status --short`; non sovrascrivere modifiche preesistenti.
+- Elenca i file che intendi cambiare.
 
-## Constraints
-- Never touch *_old/
-- Never modernize SQL
-- Never translate domain names
+## Convenzioni obbligatorie
+- Bootstrap: i tre require_once definiti in stile.md, nello stesso ordine.
+- Tabelle plural_lowercase; PK ID; FK logiche ID+Tabella; flag IS_*.
+- Tab_* soltanto via trigger; termini di dominio in italiano.
+- Funzioni con un solo array $params e prefissi Lab_*, ATT_*, CTR_*, Solleciti_*, Get*.
+- Segui $CRUD->Page() e $CRUD->Form() da un reference reale.
+
+## Vietato
+- Non modernizzare mysql_*: è uno shim.
+- Non toccare *_old/, action/crud/functions.php, app/, plugins/.
+- Non inserire segreti in configure.php.
+- Non fare refactor fuori task.
+
+## Verifica
+- `php -l` su ogni PHP modificato.
+- `git diff --check`, `git diff --stat`, review del diff completo.
+- Test funzionale descritto dal task.
 ```
 
-### Come usarlo
+## Prompt da dare a Codex
+
+```text
+Read AGENTS.md and the complete target file first.
+Target: view/agenti/agenti_lista.php
+Reference: [path to a verified, analogous STH file]
+Change: [one observable result].
+Do not touch any other file and do not refactor unrelated code.
+Preserve mysql_* and all Italian domain terms.
+Verify with: php -l ..., git diff --check, and [functional check].
+Report exact commands and outputs; do not claim the browser test was run unless it was.
+```
+
+## Igiene del contesto
+
+- una sessione per un obiettivo
+- reference mirato, non l’intero repository
+- batch piccoli e omogenei
+- nuova sessione se il piano cambia sostanzialmente
+- riassunto nel task Kanban, non affidarti alla memoria della chat
+
+Ho provato a continuare conversazioni lunghe con “come prima”: dopo la compressione sparivano proprio i vincoli importanti. Ripeti nel prompt file, risultato, divieti e verifica.
+
+## Verifica minima
 
 ```bash
-# Copia nel progetto
-cp /home/clawy/dev/code-wiki/CODEX-CONTEXT.md ./
+# WHY: nessun errore sintattico nei file toccati.
+git diff --name-only -- '*.php' | while IFS= read -r f; do php -l "$f"; done
 
-# Adatta al progetto specifico
-# Modifica sezioni 1, 4, 5, 6, 7
+# WHY: fallisce su whitespace e conflict marker lasciati dalla patch.
+git diff --check
 
-# Lancia Codex con context
-codex exec --context CODEX-CONTEXT.md "Task qui"
+# WHY: confronta lo scope reale con quello autorizzato.
+git status --short
+git diff --stat
+git diff
 ```
-
----
-
-## Verifica Funzionamento
-
-```bash
-cd /home/clawy/dev/insta
-codex exec --sandbox workspace-write "Scrivi 1 riga: cosa fa questo progetto?" < /dev/null
-```
-
-Se risponde correttamente → OK.
-
----
-
-## Prossimo
-
-Vai a [Setup GStack](setup-gstack.md).

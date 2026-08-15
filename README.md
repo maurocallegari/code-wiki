@@ -1,117 +1,53 @@
 # Code Wiki
 
-<div class="hero">
-  <h1>Code Wiki</h1>
-  <p>Guida operativa per usare Hermes + Codex nel tuo lavoro quotidiano.</p>
-  <p><b>Obiettivo:</b> sostituire il coding tradizionale con AI-coding, mantenendo il tuo stile.</p>
-</div>
+Questa è la guida operativa di Mauro per affidare il coding a Hermes e Codex senza perdere controllo, convenzioni STH o tempo in verifiche vaghe.
 
----
+> [!TIP] Follow me: scegli un task reale, apri la pagina adatta e copia il prompt. Non leggere tutto prima di iniziare.
 
-## Start Here
+## La regola che guida tutto
 
-<div class="grid">
-  <div class="card">
-    <h3>🎯 Il Metodo</h3>
-    <p>Il tuo sistema operativo: come lavorare ogni giorno, strumenti, formule, checklist.</p>
-    <a href="#/metodo">Leggi →</a>
-  </div>
-  <div class="card">
-    <h3>🛠 Setup Strumenti</h3>
-    <p>Hermes: config, skills, cron, kanban. Codex: install, auth, context, import.</p>
-    <a href="#/setup">Leggi →</a>
-  </div>
-  <div class="card">
-    <h3>📝 Il Tuo Stile</h3>
-    <p>Convenzioni, pattern, naming, domain terms — il tuo stile in 11 regole.</p>
-    <a href="#/stile">Leggi →</a>
-  </div>
-  <div class="card">
-    <h3>💡 Come Importare Progetti</h3>
-    <p>Checklist per portare qualsiasi codebase esistente sotto Hermes + Codex.</p>
-    <a href="#/import">Leggi →</a>
-  </div>
-  <div class="card">
-    <h3>🎓 Tutorial</h3>
-    <p>Esercizi pratici: fix bug, nuova feature, batch conversione.</p>
-    <a href="#/tutorial">Leggi →</a>
-  </div>
-  <div class="card">
-    <h3>⚠️ Problemi Comuni</h3>
-    <p>Errori che ho fatto io e tu, e come non ripeterli.</p>
-    <a href="#/problemi">Leggi →</a>
-  </div>
-</div>
+**L’AI scrive. Tu definisci il risultato e accetti solo prove.** Ho provato a considerare “fatto” ciò che il modello dichiarava concluso: il bug restava live, oppure erano cambiati file non richiesti. Da qui la regola: nessun “done” senza comando, output e test funzionale.
 
----
+```mermaid
+flowchart LR
+    A[Task Kanban] --> B[Isola file e risultato]
+    B --> C{Chi esegue?}
+    C -->|codice circoscritto o batch| D[Codex]
+    C -->|server, cron, deploy, coordinamento| E[Hermes]
+    D --> F[Diff + test]
+    E --> F
+    F -->|prove OK| G[Deploy verificato]
+    F -->|prova fallita| B
+```
 
-## Strumenti
+## Scegli la porta giusta
 
-<div class="grid">
-  <div class="card">
-    <h3>Hermes</h3>
-    <p>Orchestratore. Gli scrivi in italiano, lui capisce, delega a Codex, verifica, deploya.</p>
-    <p><b>Path:</b> Raspberry + MacBook Air</p>
-    <a href="#/setup-hermes">Config →</a>
-  </div>
-  <div class="card">
-    <h3>Codex</h3>
-    <p>Esecutore di codice puro. Lo chiami per batch, refactoring, conversioni. Prompt in inglese.</p>
-    <p><b>CLI:</b> codex exec</p>
-    <a href="#/setup-codex">Config →</a>
-  </div>
-  <div class="card">
-    <h3>GStack</h3>
-    <p>30 skills per workflow: /review, /qa, /ship, /autoplan, /careful, /investigate, /cso.</p>
-    <p><b>Path:</b> ~/.hermes/skills/gstack-*/</p>
-    <a href="#/gstack">Skills →</a>
-  </div>
-  <div class="card">
-    <h3>gbrain</h3>
-    <p>Memoria semantica per l'AI. Importi appunti/codice, l'AI fa ricerche cross-session.</p>
-    <p><b>Engine:</b> PGLite (locale)</p>
-    <a href="#/gbrain">Setup →</a>
-  </div>
-</div>
+| Se devi… | Usa | Parti da |
+|---|---|---|
+| correggere una pagina PHP/JS | Codex | [Tutorial fix bug](tutorial-fix-bug.md) |
+| coordinare analisi, backup e deploy | Hermes | [Setup Hermes](setup-hermes.md) |
+| modificare molti file simili | Codex, batch piccoli | [Tutorial batch](tutorial-batch.md) |
+| adottare un repo sconosciuto | Hermes per audit, Codex per codice | [Import](import.md) |
+| fissare le convenzioni STH | una skill locale | [Creare skill](creating-skills.md) |
+| decidere configurazione e controlli | entrambi | [Best Practices 2026](best-practices.md) |
 
----
+## Percorso consigliato
 
-## Team
+1. Leggi [Il Metodo](metodo.md) e usa la formula del prompt.
+2. Incolla [Il mio stile](stile.md) in `AGENTS.md` del repo STH.
+3. Configura [Hermes](setup-hermes.md) e [Codex](setup-codex.md) col minimo indispensabile.
+4. Esegui un tutorial su un branch o una copia locale.
+5. Porta ogni lavoro nel [Kanban](kanban.md).
+6. Fai [deploy](deploy.md) solo dopo le prove.
 
-<div class="grid">
-  <div class="card">
-    <h3>📊 Kanban</h3>
-    <p>Task reali: Da fare, In corso, Verifica, Fatto,Blocked.</p>
-    <p><b>ID Board:</b> t_4a10fd31...</p>
-    <a href="#/kanban">Stato →</a>
-  </div>
-  <div class="card">
-    <h3>⏰ Cron</h3>
-    <p>8 job: backup, reddit, finance, idee proattive, workspace sync, weekly research.</p>
-    <p><b>Lista:</b> cronjob list</p>
-    <a href="#/cron">Dettagli →</a>
-  </div>
-  <div class="card">
-    <h3>🚀 Deploy</h3>
-    <p>FTP verificato: rm + put, chmod 644, bump versione, mirror -R.</p>
-    <p><b>Host:</b> claw@nswr.it</p>
-    <a href="#/deploy">Workflow →</a>
-  </div>
-  <div class="card">
-    <h3>🐙 GitHub</h3>
-    <p>Token disponibile, repo private, push automatico.</p>
-    <p><b>Repo:</b> clawy-dashboard, code-wiki, hermes-backup</p>
-    <a href="#/github">Config →</a>
-  </div>
-</div>
+> [!DANGER] Non inserire password, token FTP o chiavi API nei prompt, nei file versionati o in `configure.php`. Indica solo il nome della variabile segreta.
 
-<style>
-.hero { text-align: center; padding: 2em 0; background: linear-gradient(135deg, #1a2238, #0b0f17); border-radius: 12px; margin-bottom: 2em; }
-.hero h1 { font-size: 2.5em; margin-bottom: 0.2em; color: #7c5cff; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1em; margin: 1.5em 0; }
-.card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 1.2em; transition: .2s; }
-.card:hover { border-color: #7c5cff; transform: translateY(-2px); }
-.card h3 { margin: 0 0 0.5em; font-size: 1.1em; }
-.card p { font-size: 0.9em; color: #8b97ad; margin: 0.5em 0; }
-.card a { color: #22d3ee; font-weight: 600; text-decoration: none; }
-</style>
+## Avvio locale
+
+```bash
+# WHY: fetch() non può leggere i Markdown da file:// in modo affidabile su iPhone/Mac.
+cd /home/clawy/dev/code-wiki
+python3 -m http.server 8000
+```
+
+Apri `http://localhost:8000`. La UI non usa CDN e funziona offline sulla rete locale dopo che il server è avviato.

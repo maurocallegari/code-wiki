@@ -1,66 +1,67 @@
-# Kanban
+# Kanban quotidiano
 
-> Task reali tracciati su board Hermes.
-
----
+Il Kanban è la memoria operativa. La chat non lo è: ho provato a lasciare decisioni in una conversazione e il giorno dopo mancavano stato, prove e prossimo passo.
 
 ## Colonne
 
-```
-Da fare → In corso → Verifica → Fatto → Blocked
-```
-
----
-
-## Task Attivi
-
-| ID | Titolo | Stato |
-|----|--------|-------|
-| t_fb3b8106 | Pulizia branch sth-assitec-gpt | ▶ ready |
-| t_754fbfb7 | Fix countdown custom duration in Insta | ▶ ready |
-| t_184686a3 | Converti agenti_elimina.php in T2 CRUD | ▶ ready |
-| t_a927239b | Aggiungere campo a tabella agenti in STH | ▶ ready |
-| t_1302b212 | Dashboard Clienti OSINT da Excel | ▶ ready |
-| t_f83d0040 | Micro-SaaS brainstorming (30 idee) | ▶ ready |
-| t_d535763e | Setup Hermex Kanban per attività con Clawy | ▶ ready |
-| t_4a10fd31 | Fix 3 demo reali | ✓ done |
-| t_e2e0984e | Pulizia disco Pi | ✓ done |
-| t_965bc715 | Gestionale AI via chat | ⊘ blocked |
-
----
-
-## Come Usare
-
-```bash
-# Lista task
-hermes kanban list
-
-# Dettaglio
-hermes kanban show t_fb3b8106
-
-# Sposta colonna
-hermes kanban promote t_fb3b8106  # → next column
-hermes kanban block t_fb3b8106    # → Blocked
-hermes kanban complete t_fb3b8106 # → Fatto
-
-# Crea nuovo
-hermes kanban create "Titolo" --body "Descrizione"
+```text
+Da fare → In corso → Verifica → Fatto
+                ↘ Bloccato
 ```
 
----
+| Colonna | Regola di ingresso | Regola di uscita |
+|---|---|---|
+| Da fare | risultato e progetto chiari | scope e verifica definiti |
+| In corso | una persona/agente responsabile | patch pronta, test statici passati |
+| Verifica | diff e prove allegati | test funzionale accettato |
+| Fatto | Definition of Done completa | nessuna |
+| Bloccato | impedimento concreto scritto | owner e prossimo controllo |
 
-## Automatizzare dalla Chat
+## Una card fatta bene
 
-Quando scrivi un task a Hermes, chiedi di crearlo nel Kanban:
+```markdown
+Titolo: STH · filtro A–Z agenti usabile su mobile
 
+Risultato: a 320–414 px tutte le lettere sono raggiungibili e cliccabili.
+File atteso: view/agenti/agenti_lista.php
+Vincoli: solo filtro; niente Table/Header/Sidebar; zone STH protette.
+Verifica: php -l, diff check, test 320/375/414 px, desktop invariato.
+Deploy: non autorizzato finché la card è in Verifica.
+
+Log:
+- baseline: [comando/output o screenshot]
+- patch: [commit/diff]
+- prove: [comandi/output]
+- live: [URL e risultato, senza credenziali]
 ```
-"Crea un task nel Kanban per: fix countdown Insta"
+
+## Dalla chat al board
+
+```text
+Crea una card Kanban per [risultato].
+Non iniziare ancora. Inserisci progetto, comportamento attuale, risultato,
+file probabili (marcati come ipotesi), vincoli, verifiche e Definition of Done.
+Se manca un dato che cambia lo scope, metti una domanda nella card.
 ```
 
-Hermes lo crea automaticamente.
+Poi:
 
----
+```text
+Prendi la card [ID reale]. Spostala in In corso, fai l’audit read-only e aggiorna
+i file in scope. Esegui la patch solo se i confini restano quelli approvati.
+Spostala in Verifica con diff e output. Non marcarla Fatto e non deployare.
+```
 
-## Prossimo
+> [!DANGER] Non lasciare che Hermes inventi ID o sintassi CLI. Usa il comando `--help` dell’integrazione Kanban installata oppure opera dalla UI/API documentata.
 
-Vai a [Problemi Comuni](problemi.md).
+## Rituale da 10 minuti
+
+1. Mattina: scegli una card “Da fare”, definisci test, portala “In corso”.
+2. Durante: aggiungi decisioni e output alla card, non solo in chat.
+3. Prima del deploy: porta in “Verifica”; controlla tu il comportamento.
+4. Fine giornata: una riga di prossimo passo per ogni “In corso”.
+5. Venerdì: chiudi duplicati e rivedi i bloccati; non cancellare la storia utile.
+
+## WIP limit
+
+Una card “In corso” per progetto e massimo due totali. I task AI sembrano paralleli, ma la verifica resta umana: troppo WIP crea una coda di patch non affidabili.

@@ -1,125 +1,98 @@
-# Importare Progetti
+# Importare un progetto in meno di un’ora
 
-> Checklist per portare qualsiasi codebase esistente sotto Hermes + Codex.
+Obiettivo: non “capire tutto”, ma creare abbastanza guardrail perché Hermes e Codex possano fare il primo task senza inventare architettura.
 
----
-
-## FASE 0: Domande Iniziali
-
-```
-1. PATH: Dove sta il progetto?
-2. TIPO: Che tipo è? (web app, API, CLI)
-3. LINGUAGI: Che linguaggi usa?
-4. DATABASE: Ha un DB? Dove?
-5. STRUTTURA: Framework o vanilla?
-6. GIT: È un repo git?
-7. LIVE: Ha un URL live?
-```
-
----
-
-## FASE 1: Audit
+## Minuti 0–10 · Inventario read-only
 
 ```bash
-# Struttura
-find /path/to/project -maxdepth 3 -type f | head -50
+cd /path/assoluto/al/repo
+git status --short
 
-# Linguaggi
-find /path/to/project -type f | sed 's/.*\.//' | sort | uniq -c | sort -rn | head -10
-
-# Config
-find /path/to/project -maxdepth 2 -name "config*" -o -name ".env*"
-
-# Database refs
-grep -r -l "mysql\|mysqli\|PDO" /path/to/project --include="*.php" 2>/dev/null | head -10
+# WHY: rg è veloce e rispetta meglio il repo rispetto a scansioni indiscriminate.
+rg --files -g '!vendor' -g '!node_modules' | sed -n '1,160p'
+find .. -name AGENTS.md -print
+rg -n "require_once|mysql_|mysqli|PDO|\$CRUD->|fetch\(" --glob '*.{php,js}' | sed -n '1,120p'
 ```
 
----
+Rispondi: entrypoint, bootstrap, DB, deploy, test, directory generate, segreti, URL live. Non leggere `.env` nei prompt e non copiare dati cliente.
 
-## FASE 2: Crea STILE.md
+## Minuti 10–25 · Estrai convenzioni, non desideri
 
-Dall'audit, scrivi le convenzioni del progetto:
+Trova un esempio corretto per lista, form, funzione e chiamata DB. Scrivi ciò che il repo **fa**, separato da ciò che vuoi migliorare.
+
+| Evidenza | Regola da estrarre |
+|---|---|
+| stesso bootstrap in molte pagine | ordine e path esatti |
+| CRUD ricorrente | chiavi realmente supportate |
+| nomi DB | PK, FK logiche, flag, computed |
+| directory storiche | zone vietate/generated/vendor |
+| script deploy | webroot, versione/cache, rollback |
+
+> [!WARNING] Ho provato a “ripulire mentre importavo”: l’agente ha scambiato legacy intenzionale per debito da eliminare. L’import è descrittivo; il refactor è un task futuro.
+
+## Minuti 25–40 · Crea `AGENTS.md`
 
 ```markdown
-# STILE.md — [Nome Progetto]
+# AGENTS.md — Nome progetto
 
-## Bootstrap
-[Come si avvia il progetto]
+## Scopo
+[Una frase: cosa fa il prodotto e per chi]
 
-## Struttura
-[Struttura cartelle]
+## Avvio e verifica
+- Directory: /path/assoluto
+- Avvio: [comando confermato]
+- Sintassi/test: [comandi confermati]
+- Live: [URL senza credenziali]
 
-## Naming
-[Convenzioni nomi]
+## Prima di modificare
+- Leggi il target completo e un reference analogo.
+- Esegui git status --short e preserva modifiche preesistenti.
+- Annuncia file in scope.
 
-## Database
-[Pattern DB]
+## Convenzioni osservate
+- [bootstrap]
+- [naming]
+- [DB/CRUD]
+- [termini dominio]
 
-## Code Style
-[Stile codice]
+## Vietato
+- [directory generate, vendor, backup, core condiviso]
+- niente segreti o refactor fuori task
 
-## Domain Terms
-[Termini da NON tradurre]
-
-## Anti-Pattern
-[Cosa NON fare]
+## Definition of Done
+- [parser/linter]
+- git diff --check e review
+- [test funzionale]
 ```
 
----
+Per STH usa direttamente le regole di [stile.md](stile.md).
 
-## FASE 3: Crea AGENTS.md
+## Minuti 40–50 · Crea una skill solo se ricorre
 
-```markdown
-# AGENTS.md — [Nome Progetto]
+Se le convenzioni sono specifiche e ricorrenti, crea una skill seguendo [Creating Your Own Skills](creating-skills.md). Se è un repo piccolo con un solo task, basta `AGENTS.md`: evitare duplicazione è una best practice.
 
-## Setup
-- Path: /path/to/project
-- Live: https://...
-- Stack: [linguaggi]
+## Minuti 50–60 · Prova controllata
 
-## Avvio
-[comando]
-
-## Deploy
-[comando]
-
-## Verifica
-[comando]
-
-## Convenzioni
-[regole]
-
-## Vincoli
-[cosa NON toccare]
+```text
+Read AGENTS.md and inspect the repository without modifying it.
+Explain the bootstrap, one representative data flow, protected paths, and the
+exact verification commands. Cite file paths and line numbers. Mark unknowns;
+do not guess. Then propose a one-file, reversible first task. Do not edit.
 ```
 
----
-
-## FASE 4: Codex Context
+Confronta la risposta con i file. Poi assegna un fix minuscolo e verifica:
 
 ```bash
-cp /home/clawy/dev/code-wiki/CODEX-CONTEXT.md /path/to/project/
-# Adatta CODEX-CONTEXT.md al progetto specifico
+git diff --name-only
+git diff --check
+# esegui parser/test confermati in AGENTS.md
 ```
 
----
+## Gate di import riuscito
 
-## FASE 5: Test
-
-```bash
-cd /path/to/project
-codex exec --context CODEX-CONTEXT.md "Descrivi questo progetto in 3 frasi"
-```
-
-Se descrizione corretta → OK.
-
----
-
-## Checklist Riassuntiva
-
-- [ ] FASE 0: Risposto alle 7 domande
-- [ ] FASE 1: Eseguito audit
-- [ ] FASE 2: Scritto STILE.md
-- [ ] FASE 3: Creato AGENTS.md
-- [ ] FASE 4: Copiato CODEX-CONTEXT.md
-- [ ] FASE 5: Testato con Codex
+- [ ] l’agente cita entrypoint e reference reali
+- [ ] sa cosa non deve toccare
+- [ ] non propone di modernizzare il legacy senza richiesta
+- [ ] comandi di verifica esistono e passano sulla baseline
+- [ ] segreti esclusi
+- [ ] primo task modifica solo lo scope autorizzato

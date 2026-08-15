@@ -1,186 +1,102 @@
-# Il Tuo Stile
+# Il mio stile STH
 
-> Le 11 regole d'oro del tuo stile di coding. L'AI le segue automaticamente.
+Queste sono istruzioni, non suggerimenti. Copiale in `AGENTS.md` e nella skill STH: ripeterle solo nel prompt ha fallito quando il contesto è stato compresso.
 
----
+## Le 11 regole
 
-## Regola 1: Bootstrap Pattern
+| # | Regola | Convenzione |
+|---:|---|---|
+| 1 | Bootstrap PHP | tre `require_once` nell’ordine esatto |
+| 2 | Tabelle | `plural_lowercase`: `studi`, `agenti`, `materiali` |
+| 3 | Chiave primaria | `ID`, auto-increment |
+| 4 | Chiavi logiche | `ID` + tabella: `IDStudio`, `IDTestata`; niente FK fisiche |
+| 5 | Flag | `IS_*`, valori 0/1 |
+| 6 | Computed | `Tab_*` aggiornati solo da trigger, mai dal PHP |
+| 7 | Lookup e figli | `tab_*`; `{parent}_righe`, per esempio `righe_intervento` |
+| 8 | Dominio | non tradurre mai i termini italiani elencati sotto |
+| 9 | CRUD | usa `$CRUD->Page()` e `$CRUD->Form()` come nel repo |
+| 10 | Funzioni | un solo array `$params`; prefissi approvati |
+| 11 | Legacy protetto | non modernizzare `mysql_*`; non toccare directory/file vietati |
 
-Ogni pagina PHP inizia così:
+## Bootstrap esatto
 
 ```php
 <?php
+// WHY: configure.php definisce i path condivisi prima dei file applicativi.
 require_once($_SERVER['DOCUMENT_ROOT'].'/configure.php');
+// WHY: config.php carica la configurazione del progetto attraverso $path_require.
 require_once($path_require.'/config.php');
+// WHY: functions.php arriva dopo la configurazione da cui dipende.
 require_once($path_require.'/functions.php');
 ```
 
-**Non devi spiegarlo all'AI:** è implicito.
-
----
-
-## Regola 2: Struttura File
-
-| Tipo | Path |
-|------|------|
-| Lista | `view/<modulo>/<modulo>_lista.php` |
-| Dettaglio | `view/<modulo>/<modulo>_scheda.php` |
-| Nuovo | `view/<modulo>/<modulo>_nuovo.php` |
-| Modifica | `view/<modulo>/<modulo>_modifica.php` |
-| Elimina | `view/<modulo>/<modulo>_elimina.php` |
-| Feed JSON | `view/<modulo>/*.json.php` |
-| Formazione | `view/<modulo>/modal_*.php` |
-
----
-
-## Regola 3: CRUD Pattern
+## CRUD esatto
 
 ```php
+<?php
+// WHY: il renderer condiviso mantiene lista, header e tabella coerenti con STH.
 $CRUD->Page([
-    'TipoPagina' => 'lista', // 'scheda.cards', 'scheda'
-    'Title' => 'Titolo',
-    'Header' => [
-        'Title' => 'Titolo',
-        'Breadcrumbs' => [...],
-        'Actions' => [...],
-    ],
-    'Table' => ['Ajax' => 1, ...],
+    'TipoPagina'=>'lista',
+    'Title'=>'Agenti',
+    'Header'=>[/* copia la forma da una pagina STH già corretta */],
+    'Table'=>[/* preserva le chiavi supportate dal CRUD esistente */],
 ]);
 
+// WHY: non inventare HTML o campi quando il motore Form gestisce già il flusso.
 $CRUD->Form([
-    'Tabella' => 'agenti',
-    'Azione' => 'insert',
-    'Location' => $path.'agenti_scheda.php?ID=#ID#',
-    'Rows' => [
-        [['Tipo'=>'text', 'Nome'=>'RagioneSociale', ...]],
-        [['Tipo'=>'checkbox', 'Nome'=>'IS_Attivo', ...]],
-        [['Tipo'=>'separator-card', 'Label'=>'Sezione']],
-    ],
+    'Tabella'=>'agenti',
+    'Azione'=>'insert',
+    'Rows'=>[[/* usa un form reale dello stesso modulo come reference */]],
 ]);
 ```
 
----
+## Database
 
-## Regola 4: Tipi Form Validi
-
+```sql
+CREATE TABLE agenti (
+  ID INT AUTO_INCREMENT PRIMARY KEY,
+  IDStudio INT,
+  IS_Attivo TINYINT(1) NOT NULL DEFAULT 1,
+  Tab_Cliente VARCHAR(255)
+);
+-- WHY: IDStudio è una relazione applicativa; STH non usa una FOREIGN KEY fisica.
+-- WHY: Tab_Cliente deve essere mantenuto da un trigger, non da INSERT/UPDATE PHP.
 ```
-text, checkbox, hidden, email, separator-card, data, ora, data-mask,
-ora-mask, tel, integer, real, file, file2, available, slide,
-toggle, radio, stepper, autocomplete
-```
 
----
+> [!DANGER] Non aggiungere mai `Tab_*` a un array di salvataggio PHP. Il valore può sembrare corretto oggi e divergere al prossimo aggiornamento; il trigger è l’unica fonte.
 
-## Regola 5: Database Naming
-
-| Tipo | Formato | Esempio |
-|------|---------|---------|
-| Tabelle | `plurali_minuscole` | `studi`, `agenti` |
-| PK | `ID` auto-increment | |
-| FK | `ID`+NomeTabella | `IDStudio`, `IDTestata` |
-| Flag | `IS_*` (0/1) | `IS_Attivo` |
-| Computed | `Tab_*` (solo trigger!) | `Tab_Cliente` |
-| Lookup | `tab_*` | `tab_stati_intervento` |
-| Child | `{padre}_righe` | `righe_intervento` |
-
-<div class="callout callout-danger">
-
-**`Tab_*` sono mantenuti da TRIGGERS.** Non scriverli mai in PHP.
-
-</div>
-
----
-
-## Regola 6: Function Conventions
+## Funzioni e dominio
 
 ```php
-// Funzione tipica
-function GetRow($params) {
-    // $params è SEMPRE un array
-    // Ritorna array o null
+<?php
+// WHY: un unico contratto array consente di estendere i parametri senza cambiare firma.
+function Lab_GetMateriali($params) {
+    // ...
 }
-
-// Prefissi dominio
-// Lab_* (laboratorio)
-// ATT_* (attività/CRM)
-// CTR_* (controlli)
-// Solleciti_* (solleciti)
-// Get* (lookup comune)
 ```
 
----
+Prefissi ammessi: `Lab_*`, `ATT_*`, `CTR_*`, `Solleciti_*`, `Get*`.
 
-## Regola 7: Domain Naming (NON TRADURRE!)
+Termini da non tradurre: **rapportini, interventi, laboratorio, controlli, preventivi, studi, clienti, agenti, materiali, solleciti, pagamenti, contratti**.
 
-```
-rapportini, interventi, laboratorio, controlli, preventivi,
-studi, clienti, depositi, agenti, tecnici, solleciti,
-pagamenti, contratti, materiali, articoli, anagrafiche
-```
+## Divieti assoluti
 
----
+- non modernizzare SQL: `mysql_*` è uno shim intenzionale
+- non modificare `*_old/`
+- non modificare `action/crud/functions.php`
+- non modificare `app/` o `plugins/`
+- non aggiungere segreti a `configure.php`
+- non creare una nuova astrazione se un reference STH risolve lo stesso caso
 
-## Regola 8: File Function Location
-
-| Tipo | File |
-|------|------|
-| Funzioni generali | `require/functions.php` |
-| Funzioni business/AJAX | `require/functions_aggiuntive.php` |
-| Funzioni CRUD | `require/functions_crud.php` |
-| Classi layout CRUD | `require/layout_crud.php` |
-| Hub JS client | `require/head_crud.php` |
-
----
-
-## Regola 9: Execute Engine
+## Controlli automatici
 
 ```bash
-# Dispatch generico
-action/crud/execute.php?Funzione=NOME&Parametri=JSON_TOKENIZZATO
+# WHY: devono essere assenti modifiche nelle zone protette.
+git diff --name-only | rg '(^|/)([^/]+_old|app|plugins)/|action/crud/functions\.php'
 
-# Delete/Insert/Update
-action/crud/crud_multiple.php
-# con ParametriForm (serialized), Azione (insert/update/delete), Tabella
+# WHY: Tab_* nel PHP è sospetto; revisiona ogni match, senza sostituzione automatica.
+rg -n "Tab_[A-Za-z0-9_]+" --glob '*.php'
+
+# WHY: traduzioni inglesi nel dominio spesso indicano che il modello ha inventato naming.
+rg -n "reports|interventions|customers|payments" --glob '*.{php,js,sql}'
 ```
-
-**Tokenizzazione:** `_GA_`=`{`, `_GC_`=`}`, `_DUEP_`=`:`, `_DQUOT_`=`"`, `_SQUOT_`=`'`
-
----
-
-## Regola 10: Inline JS/CSS
-
-```php
-'Script' => "
-    document.addEventListener('DOMContentLoaded', function () {
-        // validazione, init, ...
-    });
-",
-```
-
-**Accettato:** inline `<script>` e inline `style`. Non è pulito ma è il tuo stile.
-
----
-
-## Regola 11: Anti-Pattern (MAI FARE)
-
-<div class="callout callout-danger">
-
-1. **Non modernizzare SQL:** `mysql_*` è uno shim, va bene così
-2. **Non aggiungere prepared statements:** non è il tuo stile
-3. **Non rimuovere `mysql_*`:** richiederebbe troppo lavoro
-4. **Non toccare `*_old/`:** sono backup morti
-5. **Non toccare `action/crud/functions.php`:** è dead code
-6. **Non toccare `app/`:** fork separato, out of scope
-7. **Non toccare vendored libs:** `plugins/`, `tablesorter`, `select2`
-
-</div>
-
----
-
-## Come usare con l'AI
-
-1. All'inizio di ogni task, carica questo file come contesto
-2. Verifica che l'output rispetti queste regole
-3. Se non le rispetta, rifa il prompt con correzioni specifiche
-
-Il file `CODEX-CONTEXT.md` esportabile contiene queste regole in formato per Codex.

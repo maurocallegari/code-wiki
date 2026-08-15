@@ -1,91 +1,78 @@
 # Il Metodo
 
-> Il tuo sistema operativo per lavorare con Hermes + Codex.
+Il sistema è semplice: definisci il contratto, fai eseguire all’AI, poi tenta di smentirla con verifiche concrete.
 
----
+## Hermes o Codex?
 
-## Filosofia
+| Segnale | Hermes | Codex |
+|---|---:|---:|
+| Telegram, Raspberry, MacBook, cron | sì | no |
+| deploy, backup, più sistemi | sì | no |
+| patch di codice in un repo | può coordinare | sì |
+| refactor ripetitivo e circoscritto | può lanciare | sì |
+| task ambiguo che richiede ispezione | sì | sì, in modalità read-only prima |
 
-**L'AI scrive codice, tu controlli.**
+Ho provato a usare un solo strumento per tutto: il contesto operativo finiva nel coding e il coding finiva in una conversazione troppo lunga. Separa orchestrazione ed esecuzione.
 
-L'AI non sostituisce il tuo giudizio. Lo amplifica. Tu decidi cosa fare, l'AI lo esegue, tu verifichi. Se qualcosa non va → correggi tu, aggiungi la regola, ripeti.
+## La formula universale
 
----
-
-## La Formula Universale
-
-Per ogni task, usa questo prompt:
-
-```
-FILE: [path esatto]
-TASK: [cosa fare]
-INPUT: [dati, esempio, contesto]
-OUTPUT: [cosa mi aspetto alla fine]
-VINCOLI: [cosa NON toccare]
-VERIFICA: [comando per testare]
-```
-
----
-
-## Flusso di Lavoro
-
-```mermaid
-graph LR
-    A[Task arriva] --> B{Tipo?}
-    B -->|Codice puro| C[Codex]
-    B -->|Operazioni| D[Hermes]
-    B -->|Entrambi| E[Hermes + Codex]
-    C --> F[Output]
-    D --> F
-    E --> F
-    F --> G[Verifica]
-    G -->|OK| H[Deploy]
-    G -->|NO| I[Correggi]
-    I --> C
+```text
+FILE: path esatto o lista chiusa
+TASK: un verbo e un risultato osservabile
+INPUT: bug, esempio reale, comportamento attuale
+OUTPUT: file e comportamento atteso
+VINCOLI: cosa non toccare, convenzioni, niente refactor
+VERIFICA: comandi + test browser/API
 ```
 
----
+Esempio STH:
 
-## Regole d'Oro
+```text
+FILE: view/agenti/agenti_lista.php
+TASK: rendi utilizzabile su mobile il filtro A–Z.
+INPUT: i 26 link esistono già e la loro logica non va cambiata.
+OUTPUT: scorrimento orizzontale, link leggibili e cliccabili a 320 px.
+VINCOLI: modifica solo il contenitore del filtro; non toccare Table, Header,
+Sidebar, *_old/, action/crud/functions.php, app/ o plugins/.
+VERIFICA: php -l; git diff --check; test a 320/375/414 px.
+```
 
-<div class="callout callout-danger">
+## Il ciclo in sette mosse
 
-1. **Non fidarti MAI del "fato"** → verifica SEMPRE
-2. **Un task alla volta** → batch max 5-10 file
-3. **Backup prima di batch grandi** → `cp -r dir dir.bak`
-4. **Bump versione a ogni deploy** → evita cache
-5. **Non toccare `*_old/`** → sono backup morti
-6. **Non modernizzare SQL** → `mysql_*` OK
-7. **Non tradurre dominio** → rapportini, interventi, laboratorio
+1. **Isola.** Trova file, comportamento e confini.
+2. **Fotografa il prima.** Salva `git status`, riproduzione e output del test.
+3. **Dai un reference.** Un file corretto vale più di “segui lo stile”.
+4. **Fai una patch piccola.** Un obiettivo, pochi file.
+5. **Verifica staticamente.** Sintassi, diff, pattern vietati.
+6. **Verifica funzionalmente.** Browser, API o flusso utente reale.
+7. **Registra e deploya.** Kanban, versione/cache, controllo live.
 
-</div>
+```bash
+# WHY: fotografa modifiche preesistenti; non attribuirle all’AI.
+git status --short
 
----
+# WHY: il parser trova errori che una lettura del diff non trova.
+php -l view/agenti/agenti_lista.php
 
-## Checklist Post-AI
+# WHY: spazi finali e conflict marker sono segnali di patch sporca.
+git diff --check
 
-Prima di considerare completato un task:
+# WHY: controlla scope e contenuto, non solo il riepilogo del modello.
+git diff --stat && git diff -- view/agenti/agenti_lista.php
+```
 
-- [ ] `php -l` passa
-- [ ] `grep` pattern sbagliati = 0
-- [ ] `grep` pattern corretti > 0
-- [ ] `git diff --stat` mostra solo file attesi
-- [ ] Test funzionale (browser/curl) OK
-- [ ] Vincoli rispettati (niente toccato dove non doveva)
-- [ ] Domain naming preservato
-- [ ] Stile rispettato
+> [!WARNING] “Nessun errore nel terminale” non è una verifica funzionale. Se il task riguarda mobile, devi toccare e scorrere il controllo su mobile.
 
----
+## Dimensione dei batch
 
-## Lingua
+Parti da 3 file omogenei. Salire a 5–10 è sensato solo dopo che il primo batch passa la matrice di test. Ho provato batch enormi: al timeout rimanevano conversioni a metà e non era più chiaro quali file fossero affidabili.
 
-| Strumento | Lingua | Motivazione |
-|-----------|--------|-------------|
-| Hermes | 🇮🇹 Italiano | Sei più veloce, esprimi meglio i contesti |
-| Codex | 🇬🇧 Inglese | Training data più ampio, coding meglio in EN |
+## Definizione di fatto
 
----
-
-## Prossimo Passo
-
-Vai a [Setup Strumenti](setup.md) per configurare Hermes e Codex.
+- [ ] comportamento riprodotto prima e corretto dopo
+- [ ] solo file autorizzati modificati
+- [ ] convenzioni STH rispettate
+- [ ] test statici eseguiti con output leggibile
+- [ ] test funzionale eseguito nell’ambiente pertinente
+- [ ] diff revisionato
+- [ ] Kanban spostato in “Fatto” dopo verifica, non prima

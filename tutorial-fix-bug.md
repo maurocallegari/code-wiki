@@ -1,91 +1,85 @@
-# Tutorial: Fix Bug
+# Tutorial · Fix bug STH
 
-> Esercizio pratico: fixare un bug reale seguendo il metodo.
+Scenario reale dal brief: nella lista agenti STH il filtro A–Z non è usabile su mobile. Non inventiamo la causa prima di leggere il file.
 
----
-
-## Scenario
-
-**Bug:** Nella lista agenti di STH Assitec, il filtro A-Z non scorre su mobile.
-
----
-
-## Step 1: Isola
+## 1. Riproduci e isola
 
 ```bash
-# Trova il file
-grep -r "filtro" dev/sth-assitec-gpt/view/agenti/agenti_lista.php | head -5
+cd /home/clawy/dev/sth-assitec-gpt
 
-# Guarda il codice
-head -60 dev/sth-assitec-gpt/view/agenti/agenti_lista.php
+# WHY: conserva modifiche preesistenti e impedisce di attribuirle al fix.
+git status --short
+
+# WHY: localizza il controllo reale; non assumere nome classe o struttura.
+rg -n "A-Z|alfabet|Left|agenti" view/agenti/agenti_lista.php
 ```
 
----
+Apri la pagina a 320, 375 e 414 px. Registra: il filtro esce dal viewport? va a capo? i link sono troppo piccoli? non scorre? La diagnosi dipende dal comportamento osservato.
 
-## Step 2: Capisci
+## 2. Dai il contratto a Codex
 
-Il filtro A-Z è nell'array `$Left` con 26 elementi. Su mobile le colonne si riducono ma il filtro potrebbe non essere scrollabile.
+```text
+Read AGENTS.md and view/agenti/agenti_lista.php completely.
 
----
-
-## Step 3: Prompt per Hermes
-
-```
-FILE: dev/sth-assitec-gpt/view/agenti/agenti_lista.php
-
-TASK: Su mobile, il filtro A-Z (array $Left) non è utilizzabile perché troppo largo per lo schermo.
-
-INPUT: Il filtro ha 26 link (A-Z) in linea. Su mobile si sovrappongono.
-
-OUTPUT: Aggiungi un container scrollabile orizzontalmente per il filtro su mobile. Il filtro deve restare visibile e utilizzabile.
-
-VINCOLI:
-- Modifica SOLO la sezione $Left
-- Non toccare Table, Header, Sidebar
-- Stile inline CSS accettato (come da convenzione)
-- Non toccare logica PHP dei link (Active, Link, Label)
-
-VERIFICA:
-- Aprire la pagina su mobile (Chrome DevTools → dispositivo)
-- Il filtro deve scorrere orizzontalmente
-- I link A-Z devono restare cliccabili
+FILE: view/agenti/agenti_lista.php
+TASK: make the existing A–Z agents filter usable by touch at 320–414 px.
+INPUT: preserve all 26 existing links and their Active/Link/Label logic.
+OUTPUT: the filter remains on one row and scrolls horizontally on narrow screens;
+every letter remains clickable, with no page-level horizontal overflow.
+CONSTRAINTS: change only the filter container/presentation. Do not change Table,
+Header, Sidebar, PHP link logic, mysql_*, *_old/, action/crud/functions.php,
+app/, or plugins/. No unrelated refactor.
+VERIFY: php -l; git diff --check; inspect diff; browser test at 320/375/414 px.
+Do not claim the browser test unless you actually run it.
 ```
 
----
+> [!TIP] Ho provato “sistema il mobile”: il modello ha ridisegnato la pagina. Il contratto sopra nomina comportamento, scope e viewport; non lascia spazio a un redesign.
 
-## Step 4: Verifica Output
+## 3. Revisiona la patch
+
+La soluzione deve adattarsi alla struttura trovata. Un possibile pattern CSS — non copiarlo senza verificare selettori reali — è:
+
+```css
+/* WHY: lo scroll resta confinato al filtro e non allarga l’intera pagina. */
+.agents-alpha-filter {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* WHY: ogni lettera resta un target singolo invece di andare a capo. */
+.agents-alpha-filter a {
+  flex: 0 0 auto;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+```
+
+## 4. Smentisci “done”
 
 ```bash
-# Sintassi
-php -l dev/sth-assitec-gpt/view/agenti/agenti_lista.php
+# WHY: verifica sintassi PHP dopo l’eventuale stringa CSS/markup inline.
+php -l view/agenti/agenti_lista.php
 
-# Pattern atteso
-grep -n "overflow-x\|white-space:nowrap" dev/sth-assitec-gpt/view/agenti/agenti_lista.php
+# WHY: conferma che la patch riguarda un solo file e nessuna zona protetta.
+git diff --stat
+git diff -- view/agenti/agenti_lista.php
+git diff --check
 
-# Visuale (apri nel browser)
+# WHY: deve esserci overflow sul filtro, non su body/html.
+rg -n "overflow-x|overflow-inline|-webkit-overflow-scrolling" view/agenti/agenti_lista.php
 ```
 
----
+Test manuale:
 
-## Step 5: Deploy
+- [ ] nessuno scroll orizzontale della pagina
+- [ ] swipe del filtro funziona a 320/375/414 px
+- [ ] A e Z raggiungibili
+- [ ] ogni lettera si attiva e filtra come prima
+- [ ] desktop invariato
 
-```bash
-# Bump versione (se applicabile)
-# Deploy FTP
-# Verifica live
-```
+## 5. Chiudi
 
----
-
-## Cosa Hai Imparato
-
-1. La formula FILE/TASK/OUTPUT/VINCOLI/VERIFICA
-2. Come isolare un bug
-3. Come verificare l'output
-4. Il flusso completo
-
----
-
-## Prossimo Esercizio
-
-Vai a [Nuova Feature](tutorial-new-feature.md) per aggiungere una funzionalità.
+Porta il task in “Verifica”; fai deploy solo dopo review. Live, ripeti il test mobile e controlla cache/versione. Solo allora “Fatto”.
