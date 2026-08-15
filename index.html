@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code Wiki — Guida Hermes + Codex</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0.9.0/dist/css/theme-defaults.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css">
+  <style>
+    :root {
+      --base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --base-background-color: #0b0f17;
+      --base-color: #e8edf6;
+      --base-font-size: 15px;
+      --theme-color: #7c5cff;
+      --sidebar-background: #111726;
+      --sidebar-border-color: rgba(255,255,255,.08);
+      --sidebar-toggle-icon-color: #8b97ad;
+      --sidebar-nav-link-color: #cdd6e6;
+      --sidebar-nav-link-color--active: #22d3ee;
+      --sidebar-nav-link-background-color--active: rgba(124,92,255,.12);
+      --search-input-background-color: rgba(255,255,255,.06);
+      --search-result-item-border-color: rgba(255,255,255,.08);
+      --table-cell-border-color: rgba(255,255,255,.08);
+      --code-inline-background-color: rgba(124,92,255,.12);
+      --code-inline-color: #a5b4fc;
+      --link-color: #22d3ee;
+      --link-text-decoration: none;
+      --heading-color: #e8edf6;
+      --heading-h1-font-size: 2em;
+      --heading-h2-font-size: 1.5em;
+      --heading-h3-font-size: 1.2em;
+      --blockquote-border-color: #7c5cff;
+      --blockquote-background-color: rgba(124,92,255,.08);
+    }
+    .sidebar { padding-top: 1rem; }
+    .sidebar-nav ul li a { font-weight: 500; padding: 6px 16px; border-radius: 6px; transition: .2s; }
+    .sidebar-nav ul li a:hover { background: rgba(124,92,255,.1); }
+    .sidebar-nav ul li.active > a { color: #22d3ee; background: rgba(124,92,255,.15); }
+    .markdown-section { max-width: 900px; padding: 2rem; }
+    .markdown-section h1 { border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 0.5rem; }
+    .markdown-section pre { border-radius: 10px; border: 1px solid rgba(255,255,255,.1); }
+    .markdown-section code { font-size: .9em; }
+    .markdown-section table { border-radius: 10px; overflow: hidden; }
+    .markdown-section blockquote { border-left: 3px solid #7c5cff; background: rgba(124,92,255,.08); padding: 1em; border-radius: 0 8px 8px 0; }
+    .callout { padding: 1em; border-radius: 10px; margin: 1em 0; }
+    .callout-warn { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); }
+    .callout-tip { background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.3); }
+    .callout-danger { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+    .badge-revenue { background: rgba(236,72,153,.2); color: #f9a8d4; }
+    .badge-newapp { background: rgba(34,197,94,.2); color: #6ee7b7; }
+    .badge-upgrade { background: rgba(124,92,255,.2); color: #a5b4fc; }
+    .badge-clientwin { background: rgba(245,158,11,.2); color: #fcd34d; }
+  </style>
+</head>
+<body>
+  <div id="app">Caricamento...</div>
+  <script>
+    window.$docsify = {
+      name: 'Code Wiki',
+      repo: 'maurocallegari/code-wiki',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      search: {
+        noResults: 'Nessun risultato',
+        paths: 'auto',
+        placeholder: 'Cerca nella wiki...',
+      },
+      pagination: {
+        previousText: '← Precedente',
+        nextText: 'Prossima →',
+        crossChapter: true,
+      },
+      copyCode: {
+        buttonText: 'Copia',
+        errorText: 'Errore',
+        successText: 'Copiato!',
+      },
+      'flexible-alerts': {
+        style: 'flat',
+        note: {label: 'Nota'},
+        tip: {label: 'Consiglio'},
+        warning: {label: 'Attenzione'},
+        danger: {label: 'Pericolo'},
+      },
+      toc: {
+        scope: '.markdown-section',
+        headings: 'h2, h3',
+        title: 'Indice',
+      },
+      executeScript: true,
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4.13.1/dist/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0.9.0/dist/js/docsify-themeable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1.5.0/dist/docsify-tabs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2.1.1/dist/docsify-copy-code.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2.6.0/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-php.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+</body>
+</html>
