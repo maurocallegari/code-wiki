@@ -2,58 +2,443 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#11130f">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101312">
+  <meta name="description" content="Code Wiki — guida operativa personale di Mauro per lavorare con Hermes e Codex.">
   <title>Code Wiki · Mauro</title>
   <style>
-    /* Hallmark · macrostructure: Index-First · theme: Terminal · nav: N3 · footer: Ft1
-     * contrast: pass (40–41) · slop: pass (42–45) · honest: pass (46)
-     * chrome: pass (47) · tokens: pass (48) · mobile: pass (34, 49–57) */
-    :root{--paper:oklch(14% .012 95);--paper-2:oklch(18% .014 95);--paper-3:oklch(23% .014 95);--ink:oklch(94% .012 95);--muted:oklch(73% .018 95);--rule:oklch(32% .018 95);--accent:oklch(82% .16 82);--danger:oklch(70% .18 28);--tip:oklch(76% .13 145);--accent-ink:oklch(16% .02 82);--focus:oklch(88% .17 82);--display:Charter,"Bitstream Charter","Iowan Old Style",serif;--body:"Aptos","Segoe UI",sans-serif;--mono:"SFMono-Regular",Menlo,Monaco,monospace;--nav:17.5rem}
-    *{box-sizing:border-box}html{background:var(--paper);color:var(--ink);scroll-behavior:smooth}body{margin:0;font:17px/1.62 var(--body);min-height:100vh}button,input{font:inherit}a{color:var(--accent);text-underline-offset:.2em}a:hover{text-decoration-thickness:.13em}a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-    .skip{position:fixed;left:.75rem;top:-5rem;background:var(--accent);color:var(--accent-ink);padding:.65rem 1rem;z-index:50}.skip:focus{top:.75rem}.menu{display:none;position:fixed;top:max(.75rem,env(safe-area-inset-top));left:.75rem;z-index:30;min-width:44px;min-height:44px;border:1px solid var(--rule);background:var(--paper-2);color:var(--ink);cursor:pointer}.backdrop{display:none}
-    aside{position:fixed;inset:0 auto 0 0;width:var(--nav);padding:2rem 1.25rem calc(2rem + env(safe-area-inset-bottom));background:var(--paper-2);border-right:1px solid var(--rule);overflow:auto;z-index:20}.brand{display:block;color:var(--ink);font:700 1.45rem/1 var(--display);text-decoration:none;margin:.15rem 0 .55rem}.tagline{color:var(--muted);font-size:.88rem;margin:0 0 1.5rem}.search{width:100%;min-height:44px;padding:.7rem .8rem;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:0;outline:2px solid transparent}.search:focus{border-color:var(--accent)}nav ul{list-style:none;padding:0;margin:1.25rem 0}nav li{margin:.1rem 0}nav a{display:block;min-height:42px;padding:.55rem .6rem;color:var(--muted);text-decoration:none;white-space:nowrap;border-left:3px solid transparent}nav a:hover,nav a[aria-current="page"]{color:var(--ink);background:var(--paper-3);border-left-color:var(--accent)}nav .section{margin-top:1rem;color:var(--accent);font:700 .72rem/1.4 var(--mono);letter-spacing:.09em;text-transform:uppercase;padding:.45rem .6rem}
-    main{margin-left:var(--nav);width:min(100% - var(--nav),76rem);padding:clamp(2.25rem,5vw,5rem) clamp(1.25rem,5vw,5.5rem) 7rem}.doc{max-width:70ch}.doc>h1:first-child{margin-top:0;font:700 clamp(2.35rem,6vw,4.9rem)/1.03 var(--display);letter-spacing:-.035em;overflow-wrap:anywhere;min-width:0}.doc h2{margin-top:2.5em;font:700 clamp(1.55rem,3vw,2.25rem)/1.12 var(--display);overflow-wrap:anywhere;min-width:0}.doc h3{margin-top:1.8em;font:700 1.18rem/1.25 var(--body)}.doc p,.doc li{max-width:68ch}.doc hr{border:0;border-top:1px solid var(--rule);margin:2.5rem 0}.doc code{font-family:var(--mono);font-size:.88em;color:var(--accent);overflow-wrap:anywhere}.doc pre{margin:1.35rem 0;padding:1rem;overflow:auto;background:var(--paper-2);border:1px solid var(--rule);-webkit-overflow-scrolling:touch}.doc pre code{color:var(--ink);overflow-wrap:normal}.doc table{display:block;width:100%;overflow:auto;border-collapse:collapse;-webkit-overflow-scrolling:touch}.doc th,.doc td{padding:.65rem .8rem;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}.doc th{color:var(--accent);font-family:var(--mono);font-size:.83rem}.doc blockquote{margin:1.5rem 0;padding:.85rem 1rem;border-left:4px solid var(--rule);background:var(--paper-2)}.doc blockquote p{margin:.2rem 0}.doc blockquote[data-kind="danger"]{border-color:var(--danger)}.doc blockquote[data-kind="warn"]{border-color:var(--accent)}.doc blockquote[data-kind="tip"]{border-color:var(--tip)}.doc ul,.doc ol{padding-left:1.3rem}.loading{color:var(--muted)}.error{border-left:4px solid var(--danger);padding:1rem;background:var(--paper-2)}footer{margin-top:5rem;padding-top:1rem;border-top:1px solid var(--rule);color:var(--muted);font-size:.85rem}
-    @media(max-width:760px){.menu{display:block}.backdrop.open{display:block;position:fixed;inset:0;background:var(--paper);opacity:.72;z-index:15}aside{transform:translateX(-102%);transition:transform .18s ease;padding-top:4.6rem;width:min(88vw,20rem)}aside.open{transform:none}main{margin-left:0;width:100%;padding:5.25rem 1rem calc(5rem + env(safe-area-inset-bottom))}.doc>h1:first-child{font-size:clamp(2.2rem,12vw,3.35rem)}.doc table{font-size:.92rem}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}aside{transition:none}}
+    /* Hallmark stamp · macro: long-document · genre: technical field manual · hero: typography-only · mobile: pass */
+    :root{--paper:oklch(15% .012 155);--panel:oklch(19% .014 155);--panel2:oklch(22% .014 155);--ink:oklch(94% .008 155);--muted:oklch(72% .012 155);--rule:oklch(30% .018 155);--accent:oklch(82% .18 145);--warn:oklch(79% .15 78);--danger:oklch(68% .18 28);--tip:oklch(73% .13 205);--sidebar:290px;--top:58px;--sans:"Aptos","Segoe UI",sans-serif;--serif:"Iowan Old Style","Palatino Linotype",Palatino,serif;--mono:"SFMono-Regular",Menlo,Monaco,monospace;color-scheme:dark}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:78px}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.62}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+    a{color:inherit}.skip{position:fixed;left:1rem;top:-5rem;z-index:999;background:var(--accent);color:var(--paper);padding:.7rem 1rem}.skip:focus{top:1rem}button,input{font:inherit}.topbar{position:fixed;inset:0 0 auto 0;height:var(--top);z-index:50;display:flex;align-items:center;border-bottom:1px solid var(--rule);background:color-mix(in oklch,var(--paper) 92%,transparent);backdrop-filter:blur(14px)}.brand{width:var(--sidebar);height:100%;display:flex;align-items:center;gap:.65rem;padding:0 1.2rem;border-right:1px solid var(--rule);font-family:var(--serif);font-size:1.15rem;text-decoration:none}.brand-mark{width:10px;height:10px;background:var(--accent);transform:rotate(45deg)}.top-meta{margin-left:auto;padding:0 1.25rem;color:var(--muted);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase}.menu{display:none;background:none;border:0;color:var(--ink);width:52px;height:52px;font-size:1.35rem}.sidebar{position:fixed;z-index:40;top:var(--top);bottom:0;left:0;width:var(--sidebar);overflow:auto;padding:1rem .9rem 4rem;border-right:1px solid var(--rule);background:var(--paper)}.search-wrap{position:relative}.search-wrap:before{content:"⌕";position:absolute;left:.8rem;top:.48rem;color:var(--muted)}#search{width:100%;border:1px solid var(--rule);border-radius:0;background:var(--panel);color:var(--ink);padding:.65rem .7rem .65rem 2rem;outline:none}#search:focus{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in oklch,var(--accent) 20%,transparent)}.search-note{font:11px var(--mono);color:var(--muted);margin:.45rem 0 1rem}.nav-list{list-style:none;padding:0;margin:0;counter-reset:nav}.nav-list li{counter-increment:nav}.nav-list a{display:grid;grid-template-columns:2rem 1fr;align-items:start;padding:.47rem .35rem;text-decoration:none;color:var(--muted);font-size:.88rem;border-left:2px solid transparent}.nav-list a:before{content:counter(nav,decimal-leading-zero);font:10px var(--mono);color:color-mix(in oklch,var(--muted) 60%,transparent);padding-top:.25rem}.nav-list a:hover,.nav-list a.active{color:var(--ink);border-color:var(--accent);background:var(--panel)}.main{margin-left:var(--sidebar);padding-top:var(--top)}.hero{min-height:61vh;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.55fr);align-items:end;gap:3rem;padding:clamp(3rem,8vw,8rem) clamp(1.3rem,6vw,6rem) 3rem;border-bottom:1px solid var(--rule)}.eyebrow,.kicker{font:11px var(--mono);text-transform:uppercase;letter-spacing:.13em;color:var(--accent)}h1{font-family:var(--serif);font-size:clamp(3.1rem,7vw,6.8rem);line-height:.88;letter-spacing:-.055em;margin:.4rem 0 1.3rem;max-width:9ch;font-weight:700}.lead{font-family:var(--serif);font-size:clamp(1.15rem,2vw,1.55rem);line-height:1.35;max-width:42ch;color:var(--muted)}.hero-card{border-top:1px solid var(--accent);padding-top:1rem}.hero-card strong{display:block;font:700 clamp(2.3rem,5vw,4rem)/1 var(--serif);margin:.4rem 0}.hero-card p{color:var(--muted);margin:.4rem 0}.reading-path{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}.reading-path a,.chip{font:11px var(--mono);text-decoration:none;border:1px solid var(--rule);padding:.35rem .55rem;color:var(--muted)}.reading-path a:hover{border-color:var(--accent);color:var(--ink)}.chapter{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,3fr);gap:clamp(2rem,6vw,6rem);padding:clamp(4rem,9vw,8rem) clamp(1.3rem,6vw,6rem);border-bottom:1px solid var(--rule)}.chapter:nth-of-type(even){background:color-mix(in oklch,var(--panel) 38%,var(--paper))}.chapter-index{position:sticky;top:calc(var(--top) + 1.3rem);align-self:start}.chapter-number{font:12px var(--mono);color:var(--accent)}.chapter h2{font-family:var(--serif);font-size:clamp(2.1rem,4.5vw,4.5rem);line-height:1;letter-spacing:-.04em;margin:.55rem 0 1rem;max-width:10ch}.chapter-summary{color:var(--muted);max-width:26ch}.content{max-width:820px}.content>p:first-child{font-size:1.15rem;color:var(--ink)}h3{font-family:var(--serif);font-size:1.65rem;line-height:1.2;margin:2.5rem 0 .7rem}h4{font:700 13px var(--mono);text-transform:uppercase;letter-spacing:.08em;margin:2rem 0 .6rem;color:var(--accent)}p,ul,ol{max-width:68ch}ul,ol{padding-left:1.25rem}li+li{margin-top:.35rem}.rule-list{list-style:none;padding:0;counter-reset:rules}.rule-list li{counter-increment:rules;display:grid;grid-template-columns:2.4rem 1fr;gap:.8rem;padding:.9rem 0;border-bottom:1px solid var(--rule)}.rule-list li:before{content:counter(rules,decimal-leading-zero);font:11px var(--mono);color:var(--accent);padding-top:.25rem}.callout{margin:1.5rem 0;padding:1rem 1.1rem 1rem 3.2rem;border:1px solid var(--rule);position:relative;background:var(--panel)}.callout:before{position:absolute;left:1rem;top:1rem;font:700 11px var(--mono)}.callout strong{display:block;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.35rem}.danger{border-left:3px solid var(--danger)}.danger:before{content:"!!";color:var(--danger)}.danger strong{color:var(--danger)}.warn{border-left:3px solid var(--warn)}.warn:before{content:"!";color:var(--warn)}.warn strong{color:var(--warn)}.tip{border-left:3px solid var(--tip)}.tip:before{content:"+";color:var(--tip)}.tip strong{color:var(--tip)}pre{position:relative;background:oklch(11% .01 155);border:1px solid var(--rule);padding:1.2rem;overflow:auto;line-height:1.55;font:13px/1.55 var(--mono);tab-size:2}code{font-family:var(--mono);font-size:.88em;color:oklch(86% .08 145)}p code,li code,td code{background:var(--panel2);padding:.12rem .3rem}pre code{color:oklch(87% .012 155);background:none;padding:0}.copy{position:absolute;right:.45rem;top:.45rem;border:1px solid var(--rule);background:var(--panel);color:var(--muted);font:10px var(--mono);padding:.3rem .45rem;cursor:pointer}.copy:hover{color:var(--ink);border-color:var(--accent)}.why{color:oklch(70% .09 145)}.table-wrap{overflow:auto;margin:1.3rem 0;border:1px solid var(--rule)}table{width:100%;border-collapse:collapse;min-width:560px;font-size:.91rem}th{text-align:left;font:700 10px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--accent);background:var(--panel2)}th,td{padding:.75rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top}tr:last-child td{border-bottom:0}.flow{border:1px solid var(--rule);background:var(--panel);padding:1rem;margin:1.4rem 0}.flow svg{width:100%;height:auto;display:block}.checklist{list-style:none;padding:0}.checklist li{padding-left:1.8rem;position:relative}.checklist li:before{content:"□";position:absolute;left:0;color:var(--accent);font-family:var(--mono)}.problem{display:grid;grid-template-columns:2.5rem 1fr;border-top:1px solid var(--rule);padding:1.1rem 0}.problem>span{font:12px var(--mono);color:var(--danger)}.problem h3{font:700 1rem var(--sans);margin:0 0 .3rem}.problem p{margin:0;color:var(--muted)}.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:1.3rem 0}.quick-grid>div{background:var(--paper);padding:1rem}.quick-grid h4{margin:0 0 .5rem}.footer{margin-left:var(--sidebar);padding:2.5rem clamp(1.3rem,6vw,6rem);display:flex;justify-content:space-between;color:var(--muted);font:11px var(--mono)}mark{background:color-mix(in oklch,var(--accent) 35%,transparent);color:var(--ink)}.hidden-search{display:none}.backtop{position:fixed;right:1rem;bottom:1rem;width:44px;height:44px;border:1px solid var(--rule);background:var(--panel);color:var(--ink);text-decoration:none;display:grid;place-items:center;z-index:20}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px}@media(max-width:850px){:root{--top:54px}.menu{display:block}.brand{width:auto;border:0;padding-left:.2rem}.top-meta{display:none}.sidebar{transform:translateX(-105%);transition:transform .22s ease;width:min(86vw,320px);box-shadow:10px 0 30px oklch(5% .01 155/.55)}body.nav-open .sidebar{transform:none}body.nav-open:after{content:"";position:fixed;inset:var(--top) 0 0;z-index:30;background:oklch(5% .01 155/.7)}.main,.footer{margin-left:0}.hero{min-height:auto;grid-template-columns:1fr;padding-top:4.5rem}.hero-card{max-width:380px}.chapter{display:block}.chapter-index{position:static;margin-bottom:2.4rem}.chapter h2{max-width:13ch}.chapter-summary{max-width:45ch}.quick-grid{grid-template-columns:1fr}.footer{display:block}.footer span{display:block;margin-top:.5rem}}@media(max-width:520px){h1{font-size:clamp(3rem,18vw,4.8rem)}.hero{gap:2rem}.chapter{padding-top:3.5rem;padding-bottom:3.5rem}pre{margin-left:-.25rem;margin-right:-.25rem;padding:1rem;font-size:12px}.table-wrap{margin-left:-.25rem;margin-right:-.25rem}.flow{padding:.4rem}.backtop{bottom:max(1rem,env(safe-area-inset-bottom))}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar{transition:none}}@media print{.topbar,.sidebar,.backtop,.copy{display:none}.main,.footer{margin:0}.hero{min-height:auto}.chapter{display:block;break-inside:avoid;padding:2rem 0}.chapter-index{position:static}body{background:white;color:black}pre{white-space:pre-wrap}}
   </style>
 </head>
 <body>
-  <a class="skip" href="#content">Vai al contenuto</a>
-  <button class="menu" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Apri navigazione">☰</button>
-  <div class="backdrop" aria-hidden="true"></div>
-  <aside id="sidebar"><a class="brand" href="#/README">Code Wiki</a><p class="tagline">Il banco di lavoro AI di Mauro.</p><input class="search" type="search" placeholder="Filtra pagine…" aria-label="Filtra pagine"><nav aria-label="Indice"><ul id="nav"></ul></nav></aside>
-  <main id="content" tabindex="-1"><article class="doc"><p class="loading">Apro il quaderno…</p></article><footer>Stealth Software · Treviso · manuale operativo locale</footer></main>
+  <a class="skip" href="#start">Vai al contenuto</a>
+  <header class="topbar"><button class="menu" id="menu" aria-label="Apri indice" aria-expanded="false">☰</button><a class="brand" href="#top"><span class="brand-mark"></span> Code Wiki</a><div class="top-meta">Mauro · Stealth Software · Treviso</div></header>
+  <aside class="sidebar" id="sidebar" aria-label="Indice della wiki">
+    <div class="search-wrap"><input id="search" type="search" placeholder="Cerca nella wiki…" aria-label="Cerca nella wiki"></div><p class="search-note" id="search-note">⌘/Ctrl + K · cerca titoli e testo</p>
+    <nav><ol class="nav-list" id="nav">
+      <li><a href="#start">Start Here</a></li><li><a href="#method">Il Metodo</a></li><li><a href="#style">Il mio stile</a></li><li><a href="#hermes">Setup Hermes</a></li><li><a href="#codex">Setup Codex</a></li><li><a href="#best">Best Practices 2026</a></li><li><a href="#skills">Creare skill</a></li><li><a href="#bug">Tutorial · Fix bug</a></li><li><a href="#feature">Tutorial · Feature</a></li><li><a href="#batch">Tutorial · Batch</a></li><li><a href="#import">Importare progetti</a></li><li><a href="#kanban">Kanban</a></li><li><a href="#deploy">Deploy FTP</a></li><li><a href="#problems">Problemi comuni</a></li><li><a href="#cheat">Cheat Sheet</a></li>
+    </ol></nav>
+  </aside>
+  <main class="main" id="top">
+    <section class="hero" aria-labelledby="hero-title"><div><div class="eyebrow">Manuale operativo personale · 2026</div><h1 id="hero-title">L’AI scrive.<br>Tu verifichi.</h1><p class="lead">La guida di Mauro per affidare il coding a Hermes e Codex senza perdere controllo, convenzioni STH o tempo dietro a un “fatto” che non funziona.</p><div class="reading-path"><a href="#method">Inizia dal metodo →</a><a href="#cheat">Apri Cheat Sheet</a></div></div><aside class="hero-card"><span class="kicker">Obiettivo</span><strong>&lt; 1 ora</strong><p>per portare un nuovo repository sotto controllo AI, con guardrail, reference e verifiche reali.</p></aside></section>
+
+    <section class="chapter searchable" id="start"><header class="chapter-index"><span class="chapter-number">01 / 15</span><h2>Start Here</h2><p class="chapter-summary">Non devi imparare a scrivere più codice. Devi imparare a definire, delegare e provare.</p></header><div class="content">
+      <p>Questa wiki è il tuo banco di lavoro per STH Assitec, Insta 2.0, Clawy Dashboard e i tool di trading. Aprila con un task reale davanti: non leggerla come un manuale teorico.</p>
+      <div class="callout tip"><strong>Follow me</strong>Scegli il problema, apri il capitolo adatto e copia il prompt. L’agente produce la patch; tu decidi risultato, confini e prova d’accettazione.</div>
+      <h3>La filosofia in una riga</h3><p><strong>L’AI scrive. Tu definisci il risultato e accetti solo prove.</strong> Ho provato a considerare “fatto” ciò che il modello dichiarava concluso: il bug restava live oppure erano cambiati file non richiesti. Da qui la regola: nessun done senza comando, output e test funzionale.</p>
+      <div class="flow" aria-label="Workflow Hermes e Codex"><svg viewBox="0 0 940 260" role="img" aria-labelledby="flow-title flow-desc"><title id="flow-title">Workflow AI di Mauro</title><desc id="flow-desc">Dal task Kanban all'isolamento, scelta tra Codex ed Hermes, test, deploy o ritorno alla diagnosi.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="oklch(82% .18 145)"/></marker></defs><g fill="none" stroke="oklch(30% .018 155)" stroke-width="2"><rect x="18" y="92" width="135" height="62"/><rect x="198" y="92" width="145" height="62"/><path d="M413 74L483 123L413 172L343 123Z"/><rect x="520" y="31" width="130" height="58"/><rect x="520" y="163" width="130" height="58"/><rect x="698" y="92" width="110" height="62"/><rect x="850" y="92" width="72" height="62"/></g><g stroke="oklch(82% .18 145)" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M153 123H198"/><path d="M343 123H357"/><path d="M464 88L520 60"/><path d="M464 158L520 192"/><path d="M650 60Q680 60 698 104"/><path d="M650 192Q680 192 698 142"/><path d="M808 123H850"/><path d="M753 154Q750 239 270 239Q225 239 225 154"/></g><g fill="oklch(94% .008 155)" font-family="Aptos,Segoe UI,sans-serif" font-size="15" text-anchor="middle"><text x="85" y="118">Task</text><text x="85" y="138">Kanban</text><text x="270" y="118">Isola file</text><text x="270" y="138">e risultato</text><text x="413" y="119">Chi</text><text x="413" y="139">esegue?</text><text x="585" y="66">CODEX</text><text x="585" y="198">HERMES</text><text x="753" y="119">Diff +</text><text x="753" y="139">test</text><text x="886" y="119">Deploy</text><text x="886" y="139">✓</text></g><g fill="oklch(72% .012 155)" font-family="SFMono-Regular,Menlo,monospace" font-size="10"><text x="472" y="49">CODICE</text><text x="469" y="199">OPS</text><text x="521" y="253">PROVA FALLITA → RIDUCI E RIPETI</text></g></svg></div>
+      <details><summary>Mostra il sorgente Mermaid del workflow</summary><pre><code>flowchart LR
+  A[Task Kanban] --&gt; B[Isola file e risultato]
+  B --&gt; C{Chi esegue?}
+  C --&gt;|codice circoscritto o batch| D[Codex]
+  C --&gt;|server, cron, deploy, coordinamento| E[Hermes]
+  D --&gt; F[Diff + test]
+  E --&gt; F
+  F --&gt;|prove OK| G[Deploy verificato]
+  F --&gt;|prova fallita| B</code></pre></details>
+      <h3>Scegli la porta giusta</h3><div class="table-wrap"><table><thead><tr><th>Devi…</th><th>Usa</th><th>Perché</th></tr></thead><tbody><tr><td>Correggere PHP/JS</td><td>Codex</td><td>Patch circoscritta, strumenti e sandbox</td></tr><tr><td>Fare batch omogenei</td><td>Codex</td><td>Controllo file-per-file</td></tr><tr><td>Gestire server, cron, Telegram, deploy</td><td>Hermes</td><td>Orchestrazione tra sistemi</td></tr><tr><td>Importare un repo</td><td>Hermes + Codex</td><td>Hermes coordina; Codex ispeziona e scrive</td></tr></tbody></table></div>
+      <div class="callout danger"><strong>Segreti</strong>Mai password, token FTP o chiavi API nei prompt, nella wiki, in Git o in <code>configure.php</code>. Nomina solo la variabile segreta.</div>
+    </div></section>
+
+    <section class="chapter searchable" id="method"><header class="chapter-index"><span class="chapter-number">02 / 15</span><h2>Il Metodo</h2><p class="chapter-summary">Un contratto chiuso, una patch piccola, prove capaci di smentire il modello.</p></header><div class="content">
+      <h3>La formula universale</h3><pre><code>FILE: [path esatto o lista chiusa]
+TASK: [un verbo + un risultato osservabile]
+INPUT: [bug attuale + reference reale]
+OUTPUT: [file e comportamento attesi]
+VINCOLI: [cosa non toccare + convenzioni]
+VERIFICA: [parser + diff + test browser/API]</code></pre>
+      <h3>Il ciclo in sette mosse</h3><ol><li><strong>Isola.</strong> Trova file, comportamento e confini.</li><li><strong>Fotografa il prima.</strong> Salva status, riproduzione e baseline.</li><li><strong>Dai un reference.</strong> Un file corretto vale più di “segui lo stile”.</li><li><strong>Fai una patch piccola.</strong> Un obiettivo, pochi file.</li><li><strong>Verifica staticamente.</strong> Sintassi, diff, pattern vietati.</li><li><strong>Verifica funzionalmente.</strong> Browser, API o flusso reale.</li><li><strong>Registra e deploya.</strong> Kanban, versione/cache, controllo live.</li></ol>
+      <pre><code><span class="why"># WHY: separa modifiche preesistenti da quelle dell’agente.</span>
+git status --short
+
+<span class="why"># WHY: il parser trova errori invisibili in una review veloce.</span>
+php -l view/agenti/agenti_lista.php
+
+<span class="why"># WHY: controlla patch sporche e scope reale.</span>
+git diff --check
+git diff --stat &amp;&amp; git diff -- view/agenti/agenti_lista.php</code></pre>
+      <div class="callout warn"><strong>Il terminale non basta</strong>“Nessun errore” non prova che il filtro mobile funzioni. Se il task riguarda un dito, devi toccare e scorrere il controllo su mobile.</div>
+      <h3>Golden rules</h3><ul class="checklist"><li>Una sessione, un obiettivo.</li><li>Parti con 3 file omogenei; passa a 5–10 solo dopo una matrice tutta verde.</li><li>Mai fidarti del riepilogo: leggi <code>git diff</code>.</li><li>Non correggere una baseline che non hai riprodotto.</li><li>“Fatto” viene dopo test funzionale e, se previsto, smoke test live.</li></ul>
+    </div></section>
+
+    <section class="chapter searchable" id="style"><header class="chapter-index"><span class="chapter-number">03 / 15</span><h2>Il mio stile</h2><p class="chapter-summary">Le 11 convenzioni STH Assitec. Sono istruzioni, non suggerimenti.</p></header><div class="content">
+      <ol class="rule-list"><li><span><strong>Bootstrap PHP.</strong> Tre <code>require_once</code> nell’ordine esatto.</span></li><li><span><strong>Tabelle.</strong> <code>plural_lowercase</code>: <code>studi</code>, <code>agenti</code>, <code>materiali</code>.</span></li><li><span><strong>Primary key.</strong> <code>ID</code>, auto-increment.</span></li><li><span><strong>Relazioni.</strong> <code>ID</code> + tabella: <code>IDStudio</code>, <code>IDTestata</code>; niente FK fisiche.</span></li><li><span><strong>Flag.</strong> <code>IS_*</code>, valori 0/1.</span></li><li><span><strong>Computed.</strong> <code>Tab_*</code> aggiornati solo da trigger, mai dal PHP.</span></li><li><span><strong>Lookup e figli.</strong> <code>tab_*</code>; <code>{parent}_righe</code>, es. <code>righe_intervento</code>.</span></li><li><span><strong>Dominio.</strong> Non tradurre i termini italiani.</span></li><li><span><strong>CRUD.</strong> Usa <code>$CRUD-&gt;Page()</code> e <code>$CRUD-&gt;Form()</code> da un reference reale.</span></li><li><span><strong>Funzioni.</strong> Un solo array <code>$params</code>; prefissi approvati.</span></li><li><span><strong>Legacy protetto.</strong> Non modernizzare <code>mysql_*</code>; non toccare zone vietate.</span></li></ol>
+      <h3>Bootstrap e CRUD esatti</h3><pre><code>&lt;?php
+<span class="why">// WHY: configure.php definisce i path condivisi per primo.</span>
+require_once($_SERVER['DOCUMENT_ROOT'].'/configure.php');
+require_once($path_require.'/config.php');
+require_once($path_require.'/functions.php');
+
+<span class="why">// WHY: il renderer condiviso conserva il contratto STH.</span>
+$CRUD-&gt;Page(['TipoPagina'=&gt;'lista','Title'=&gt;'Agenti',
+  'Header'=&gt;[/* reference reale */], 'Table'=&gt;[/* reference reale */]]);
+
+$CRUD-&gt;Form(['Tabella'=&gt;'agenti','Azione'=&gt;'insert',
+  'Rows'=&gt;[[/* reference reale */]]]);</code></pre>
+      <h3>Database e funzioni</h3><pre><code>CREATE TABLE agenti (
+  ID INT AUTO_INCREMENT PRIMARY KEY,
+  IDStudio INT,
+  IS_Attivo TINYINT(1) NOT NULL DEFAULT 1,
+  Tab_Cliente VARCHAR(255)
+);
+<span class="why">-- WHY: IDStudio è relazione applicativa; nessuna FOREIGN KEY fisica.</span>
+<span class="why">-- WHY: Tab_Cliente appartiene a un trigger, non a INSERT/UPDATE PHP.</span>
+
+function Lab_GetMateriali($params) {
+  <span class="why">// WHY: un solo contratto array resta estendibile.</span>
+}</code></pre>
+      <p>Prefissi: <code>Lab_*</code>, <code>ATT_*</code>, <code>CTR_*</code>, <code>Solleciti_*</code>, <code>Get*</code>.</p><p>Termini intoccabili: <strong>rapportini, interventi, laboratorio, controlli, preventivi, studi, clienti, agenti, materiali, solleciti, pagamenti, contratti</strong>.</p>
+      <div class="callout danger"><strong>Zone rosse</strong>Non toccare <code>*_old/</code>, <code>action/crud/functions.php</code>, <code>app/</code>, <code>plugins/</code>. Non aggiungere segreti a <code>configure.php</code>. <code>mysql_*</code> è uno shim intenzionale.</div>
+      <pre><code><span class="why"># WHY: qualsiasi output qui blocca il task.</span>
+git diff --name-only | rg '(^|/)([^/]+_old|app|plugins)/|action/crud/functions\.php'
+
+<span class="why"># WHY: ogni Tab_* in PHP richiede review; non sostituire in automatico.</span>
+rg -n "Tab_[A-Za-z0-9_]+" --glob '*.php'</code></pre>
+    </div></section>
+
+    <section class="chapter searchable" id="hermes"><header class="chapter-index"><span class="chapter-number">04 / 15</span><h2>Setup Hermes</h2><p class="chapter-summary">L’orchestratore: Telegram, server, cron, Kanban, deploy e passaggio del codice a Codex.</p></header><div class="content">
+      <div class="callout warn"><strong>Prima controlla</strong>I comandi Hermes cambiano tra installazioni. Esegui <code>hermes --help</code> e il <code>--help</code> del sotto-comando; non copiare sintassi non confermata.</div>
+      <h3>Configurazione minima</h3><pre><code><span class="why"># ~/.hermes/config.yaml</span>
+workspace: /home/clawy/dev   <span class="why"># WHY: limita l’area operativa.</span>
+language: it                <span class="why"># WHY: dialogo in italiano.</span>
+confirm_destructive_actions: true
+
+<span class="why"># ~/.hermes/.env — NON versionare</span>
+FTP_HOST=...
+FTP_USER=...
+FTP_PASSWORD=...</code></pre>
+      <h3>Personalità operativa</h3><pre><code>Sei l’orchestratore operativo di Mauro.
+Parla italiano, sii diretto e non dichiarare “fatto” senza prove.
+Prima di scrivere: mostra file in scope e modifiche preesistenti.
+Per codice puro usa Codex con workspace ristretto.
+Per STH applica la skill sth-conventions.
+Non eseguire deploy, delete o chmod senza target risolto e conferma.
+Al termine: diff, comandi, output e test live ancora necessario.</code></pre>
+      <h3>Skill e personalità</h3><div class="table-wrap"><table><thead><tr><th>Skill</th><th>Decisione</th><th>Perché</th></tr></thead><tbody><tr><td><code>sth-conventions</code></td><td>Tieni</td><td>Protegge naming, CRUD e legacy</td></tr><tr><td><code>verified-deploy</code></td><td>Tieni</td><td>Checklist, marker e rollback</td></tr><tr><td><code>repo-import</code></td><td>Tieni</td><td>Inventario e AGENTS.md</td></tr><tr><td><code>kanban-daily</code></td><td>Tieni</td><td>Una fonte per lo stato</td></tr><tr><td>Duplicate / inutilizzate 60–90 gg</td><td>Archivia</td><td>Meno routing errato</td></tr></tbody></table></div>
+      <h3>Cron essenziali</h3><div class="table-wrap"><table><thead><tr><th>Quando</th><th>Job</th><th>Regola</th></tr></thead><tbody><tr><td>Ogni giorno</td><td>Spazio disco + inode su claw.nswr.it</td><td>Alert, mai auto-delete</td></tr><tr><td>Ogni giorno</td><td>Backup configurazioni</td><td>Segreti esclusi; restore testato</td></tr><tr><td>Lun–Ven</td><td>Digest Kanban</td><td>Report, nessuna promozione automatica</td></tr><tr><td>Settimanale</td><td>Repo sporchi/branch abbandonati</td><td>Report, non delete</td></tr><tr><td>Settimanale</td><td>Link e sintassi wiki</td><td>Exit code non zero su errore</td></tr></tbody></table></div>
+      <pre><code><span class="why"># WHY: monitoraggio read-only; non “cura” il disco cancellando.</span>
+15 7 * * * /path/assoluto/check-disk.sh &gt;&gt; /path/assoluto/log/check-disk.log 2&gt;&amp;1
+<span class="why"># WHY: il digest mantiene vivo il Kanban senza decidere al posto tuo.</span>
+30 7 * * 1-5 /path/assoluto/kanban-digest.sh &gt;&gt; /path/assoluto/log/kanban.log 2&gt;&amp;1</code></pre>
+      <div class="callout danger"><strong>Cron sicuro</strong>Path assoluti, lock, timeout, log ruotati. Mai password nella crontab e mai pulizia con <code>rm -rf</code>.</div>
+    </div></section>
+
+    <section class="chapter searchable" id="codex"><header class="chapter-index"><span class="chapter-number">05 / 15</span><h2>Setup Codex</h2><p class="chapter-summary">Il banco da lavoro puro: aprilo nel repo, limita il workspace, leggi prima di scrivere.</p></header><div class="content">
+      <h3>Installa, autentica, conferma</h3><pre><code><span class="why"># WHY: usa la documentazione della versione davvero installata.</span>
+command -v codex
+codex --version
+codex --help
+codex login   <span class="why"># login interattivo: niente token nella history.</span></code></pre>
+      <h3>Apri dal repo</h3><pre><code>cd /home/clawy/dev/sth-assitec-gpt
+git status --short
+codex
+<span class="why"># WHY: il workspace rende leggibili/scrivibili solo file pertinenti.</span></code></pre>
+      <div class="callout danger"><strong>Minimo privilegio</strong>Audit in read-only; patch in workspace-write. Non usare permessi pieni per comodità e tieni la rete spenta se il task non la richiede.</div>
+      <h3>Il tuo AGENTS.md STH</h3><pre><code># AGENTS.md
+## Missione
+Preserva comportamento legacy e convenzioni STH.
+
+## Prima di modificare
+- Leggi target completo e un reference analogo.
+- Esegui git status --short; preserva modifiche esistenti.
+- Elenca i file che intendi cambiare.
+
+## Convenzioni
+- Bootstrap esatto; plural_lowercase; ID; ID+Tabella; IS_*.
+- Tab_* soltanto via trigger; dominio in italiano.
+- Un $params; prefissi Lab_*, ATT_*, CTR_*, Solleciti_*, Get*.
+- $CRUD-&gt;Page() e $CRUD-&gt;Form() da reference reale.
+
+## Vietato
+- Non modernizzare mysql_*.
+- Non toccare *_old/, action/crud/functions.php, app/, plugins/.
+- Niente segreti in configure.php; niente refactor fuori task.
+
+## Verifica
+- php -l su ogni PHP modificato.
+- git diff --check, --stat e diff completo.
+- Test funzionale descritto nel task.</code></pre>
+      <h3>Prompt base</h3><pre><code>Read AGENTS.md and the complete target file first.
+Target: [path esatto]
+Reference: [path analogo verificato]
+Change: [un risultato osservabile].
+Do not touch any other file and do not refactor unrelated code.
+Preserve mysql_* and all Italian domain terms.
+Verify with: [parser], git diff --check, and [functional check].
+Report exact commands and outputs; never claim an unrun browser test.</code></pre>
+      <p>Ho provato conversazioni lunghe con “come prima”: dopo la compressione sparivano proprio i vincoli importanti. Ripeti sempre file, risultato, divieti e verifica. Una sessione per obiettivo.</p>
+    </div></section>
+
+    <section class="chapter searchable" id="best"><header class="chapter-index"><span class="chapter-number">06 / 15</span><h2>Best Practices 2026</h2><p class="chapter-summary">Meno tool, contesto più stretto, prove più forti. La baseline che puoi spiegare.</p></header><div class="content">
+      <div class="callout warn"><strong>Instabile per natura</strong>Modelli, provider, flag e prezzi cambiano. Controlla documentazione e <code>--help</code> prima di cambiare configurazione: qui trovi criteri, non un “migliore per sempre”.</div>
+      <div class="table-wrap"><table><thead><tr><th>Area</th><th>Scelta 2026</th><th>Perché</th></tr></thead><tbody><tr><td>Istruzioni</td><td>AGENTS.md corto + skill dettagliate</td><td>Regole vicine al codice</td></tr><tr><td>Modello</td><td>Reasoning forte per diagnosi/review; coding agent per patch</td><td>Separa decisione ed esecuzione</td></tr><tr><td>Sandbox</td><td>Read-only audit; workspace-write patch</td><td>Minimo privilegio</td></tr><tr><td>Rete</td><td>Spenta salvo necessità</td><td>Meno variabilità/esfiltrazione</td></tr><tr><td>Batch</td><td>3, poi 5–10</td><td>Limita fallimenti parziali</td></tr><tr><td>Stato</td><td>Git + Kanban</td><td>La chat non è memoria</td></tr><tr><td>Deploy</td><td>Manifest + rollback + smoke</td><td>FTP “ok” non significa live</td></tr></tbody></table></div>
+      <h3>Come scegliere modello/provider</h3><ol><li>Il modello più capace disponibile per capire STH, diagnosticare e revisionare rischio.</li><li>Un agente coding con strumenti e sandbox per patch e batch.</li><li>Reference preciso prima di contesto enorme.</li><li>Benchmark personale: 5 task reali STH/Insta; misura scope, test, costo e tempo.</li><li>Non cambiare provider nel mezzo di un batch.</li></ol>
+      <h3>Tooling minimo raccomandato</h3><pre><code>Git + rg + parser/linter + test applicativi
+Codex CLI nel repository
+Hermes per orchestrazione, Kanban, cron e deploy
+AGENTS.md in ogni repo
+Skills: sth-conventions · repo-import · verified-deploy · kanban-daily</code></pre>
+      <p>Ho provato ad accumulare tool e skill: il router sceglieva quella quasi giusta invece di quella specifica. Archivia integrazioni inutilizzate e skill sovrapposte.</p>
+      <h3>Sicurezza e supply chain</h3><ul><li>Pin di versioni e lockfile quando supportati.</li><li>Leggi gli script di installazione prima di eseguirli.</li><li>Segreti in secret store o <code>.env</code> ignorato.</li><li>Niente dump DB o log clienti nei prompt esterni.</li><li>Connector solo con i permessi necessari; conserva audit trail.</li></ul>
+      <div class="callout danger"><strong>Regola delle tre chiavi</strong>Un agente con shell, rete e segreti è un amministratore. Non concedere tutte e tre se serve solo una patch locale.</div>
+      <h3>Riesame ogni trimestre</h3><ul class="checklist"><li>Quali skill sono state davvero invocate?</li><li>Quali verifiche hanno trovato bug?</li><li>Quali cron hanno fallito silenziosamente?</li><li>Quale modello ha rispettato meglio i 5 benchmark?</li><li>Quali accessi non servono più?</li></ul>
+    </div></section>
+
+    <section class="chapter searchable" id="skills"><header class="chapter-index"><span class="chapter-number">07 / 15</span><h2>Creare le tue skill</h2><p class="chapter-summary">Trasforma un errore ricorrente in istruzioni verificabili, non in un prompt più arrabbiato.</p></header><div class="content">
+      <p>Follow me: creiamo <code>sth-conventions</code>. Trigger: ogni modifica nel repo STH o un task che cita i suoi termini di dominio.</p>
+      <h3>1. Un solo compito</h3><p>Non mettere deploy, import e CRUD nella stessa skill. Ho provato skill enciclopediche: caricavano troppe regole e saltavano quelle decisive.</p>
+      <h3>2. Raccogli prove reali</h3><ul><li>Una lista corretta con <code>$CRUD-&gt;Page()</code>.</li><li>Un form corretto con <code>$CRUD-&gt;Form()</code>.</li><li>Una funzione con <code>$params</code>.</li><li>Schema/trigger che gestisce un <code>Tab_*</code>.</li><li>Un esempio negativo incontrato davvero.</li></ul>
+      <div class="callout danger"><strong>Pulisci gli esempi</strong>Non copiare password, DSN, dati cliente o contenuto di <code>configure.php</code> nei reference.</div>
+      <h3>3. Crea la struttura</h3><pre><code>sth-conventions/
+├── SKILL.md
+└── references/
+    ├── list-pattern.php
+    ├── form-pattern.php
+    └── verification.md</code></pre>
+      <h3>4. Scrivi SKILL.md</h3><pre><code>---
+name: sth-conventions
+description: Applica convenzioni STH a PHP/MySQL, CRUD, naming e dominio.
+---
+
+# STH Conventions
+## Trigger
+Usa per ogni modifica STH o termine del dominio STH.
+
+## Prima di modificare
+1. Leggi AGENTS.md e il target completo.
+2. Leggi un solo reference analogo.
+3. Esegui git status --short e dichiara lo scope.
+
+## Regole obbligatorie
+- Bootstrap esatto; plural_lowercase; ID; ID+Tabella; IS_*.
+- Tab_* solo trigger; tab_* lookup; {parent}_righe figli.
+- Dominio italiano; un $params; prefissi approvati.
+- Copia $CRUD-&gt;Page/Form dai reference.
+
+## Vietato
+- mysql_* è uno shim: non modernizzarlo.
+- Non toccare *_old/, action/crud/functions.php, app/, plugins/.
+- Niente segreti o refactor fuori task.
+
+## Verifica
+php -l, git diff --check e test funzionale. Riporta output reale.</code></pre>
+      <h3>5. Installa senza duplicare</h3><pre><code><span class="why"># WHY: trova istruzioni e skill esistenti prima di crearne una seconda.</span>
+find . -name AGENTS.md -o -name SKILL.md
+sed -n '1,240p' /path/to/sth-conventions/SKILL.md</code></pre><p>Usa la directory documentata dalla tua installazione. Se Hermes e Codex devono condividere la skill, mantieni una fonte versionata e sincronizzala con uno script controllato.</p>
+      <h3>6. Testa con tre attacchi</h3><div class="table-wrap"><table><thead><tr><th>Test</th><th>Prompt</th><th>Passa se</th></tr></thead><tbody><tr><td>Positivo</td><td>Aggiungi campo a form agenti</td><td>Reference CRUD e naming corretti</td></tr><tr><td>Protezione</td><td>Modernizza tutte le mysql_*</td><td>Rifiuta</td></tr><tr><td>Scope</td><td>Fix filtro e pulisci plugins/</td><td>Blocca plugins/</td></tr></tbody></table></div>
+      <h3>7. Versiona sui fallimenti reali</h3><pre><code>v1.0 — brief + reference verificati
+v1.1 — errore reale trovato in review
+v1.2 — rimossa istruzione ambigua o duplicata</code></pre><div class="callout tip"><strong>Prova finale</strong>Chiedi quali regole sono state applicate e dove si vedono nel diff. Citare la skill senza evidenza non vale.</div>
+    </div></section>
+
+    <section class="chapter searchable" id="bug"><header class="chapter-index"><span class="chapter-number">08 / 15</span><h2>Tutorial · Fix bug</h2><p class="chapter-summary">Caso STH reale: filtro A–Z della lista agenti inutilizzabile su mobile.</p></header><div class="content">
+      <h3>1. Riproduci, non indovinare</h3><pre><code>cd /home/clawy/dev/sth-assitec-gpt
+git status --short
+<span class="why"># WHY: localizza il controllo reale; non presumere classe o markup.</span>
+rg -n "A-Z|alfabet|Left|agenti" view/agenti/agenti_lista.php</code></pre><p>A 320, 375 e 414 px registra: esce dal viewport? Va a capo? I link sono troppo piccoli? Non scorre? La causa dipende da ciò che osservi.</p>
+      <h3>2. Contratto per Codex</h3><pre><code>Read AGENTS.md and view/agenti/agenti_lista.php completely.
+FILE: view/agenti/agenti_lista.php
+TASK: make the existing A–Z filter usable by touch at 320–414 px.
+INPUT: preserve all 26 links and their Active/Link/Label logic.
+OUTPUT: one row, horizontal scroll on narrow screens; every letter clickable;
+no page-level horizontal overflow.
+CONSTRAINTS: only filter container/presentation. Do not change Table, Header,
+Sidebar, PHP link logic, mysql_*, *_old/, action/crud/functions.php, app/, plugins/.
+VERIFY: php -l; git diff --check; inspect diff; test 320/375/414 px.
+Never claim a browser test you did not run.</code></pre>
+      <div class="callout tip"><strong>Perché è preciso</strong>Ho provato “sistema il mobile”: il modello ha ridisegnato la pagina. Qui comportamento, scope e viewport chiudono quella porta.</div>
+      <h3>3. Pattern possibile, non soluzione cieca</h3><pre><code><span class="why">/* WHY: lo scroll resta nel filtro e non allarga la pagina. */</span>
+.agents-alpha-filter { display:flex; gap:.5rem; overflow-x:auto;
+  overscroll-behavior-inline:contain; -webkit-overflow-scrolling:touch; }
+<span class="why">/* WHY: ogni lettera resta un target touch singolo. */</span>
+.agents-alpha-filter a { flex:0 0 auto; min-width:2.75rem; min-height:2.75rem; }</code></pre>
+      <h3>4. Smentisci “done”</h3><pre><code>php -l view/agenti/agenti_lista.php
+git diff --stat
+git diff -- view/agenti/agenti_lista.php
+git diff --check
+rg -n "overflow-x|overflow-inline|-webkit-overflow-scrolling" view/agenti/agenti_lista.php</code></pre><ul class="checklist"><li>Nessuno scroll orizzontale pagina.</li><li>Swipe filtro a 320/375/414 px.</li><li>A e Z raggiungibili.</li><li>Ogni lettera filtra come prima.</li><li>Desktop invariato.</li></ul><p>Metti la card in <strong>Verifica</strong>. Dopo deploy ripeti live e controlla cache/versione; solo allora <strong>Fatto</strong>.</p>
+    </div></section>
+
+    <section class="chapter searchable" id="feature"><header class="chapter-index"><span class="chapter-number">09 / 15</span><h2>Tutorial · Feature</h2><p class="chapter-summary">Caso Insta 2.0 reale: aggiungere “Neon” senza rompere preview, export o altri stili.</p></header><div class="content">
+      <h3>1. Mappa l’intera pipeline</h3><pre><code>cd /home/clawy/dev/insta
+git status --short
+rg -n "visual style|visual-style|cds-|style.*select|theme" --glob '*.{css,js,html,php}'
+rg -l "cds-" --glob '*.css'</code></pre><p>Annota CSS, registro/selettore UI, preview e formati slide. “CSS only” vale solo se il selettore scopre automaticamente le classi.</p>
+      <div class="table-wrap"><table><thead><tr><th>Area</th><th>Accettazione</th></tr></thead><tbody><tr><td>Selezione</td><td>Neon appare nell’elenco esistente</td></tr><tr><td>Rendering</td><td>Preview e output finale usano le stesse classi</td></tr><tr><td>Leggibilità</td><td>Glow rinforza, non sostituisce il testo</td></tr><tr><td>Formato</td><td>Nessun overflow nei formati supportati</td></tr><tr><td>Regressione</td><td>Altri stili invariati</td></tr></tbody></table></div>
+      <h3>2. Prompt per Codex</h3><pre><code>Read AGENTS.md and inspect the complete visual-style pipeline first.
+Use [verified existing style] as the reference.
+TASK: add a selectable “Neon” visual style to Insta 2.0.
+OUTPUT: minimum CSS and registry/selector changes; preview = final render.
+CONSTRAINTS: preserve every style, class contract, size and export behavior.
+No shared-class rename or unrelated refactor.
+STYLE: dark base; restrained cyan/magenta/lime only if the palette API supports it;
+solid readable text, never glow-only.
+VERIFY: syntax checks, diff check, every aspect ratio, comparison style.
+First report exact files. Do not edit until the path is clear.</code></pre>
+      <div class="callout warn"><strong>Pipeline, non screenshot</strong>Ho provato ad aggiungere solo quattro classi CSS: il preview sembrava corretto, ma selettore ed export ignoravano Neon.</div>
+      <pre><code><span class="why">/* WHY: il testo resta leggibile anche se l’export attenua il glow. */</span>
+.cds-neon-title { color:var(--neon-title-color);
+  text-shadow:0 0 var(--neon-glow-radius) var(--neon-title-glow); }
+<span class="why">/* WHY: il bordo delimita la slide anche senza ombra. */</span>
+.cds-neon-border { border:var(--neon-border-width) solid var(--neon-border-color);
+  box-shadow:0 0 var(--neon-glow-radius) var(--neon-border-glow); }</code></pre><p>I token sono illustrativi: usa quelli reali del repo. Verifica reload pulito, preview = export, tutti i formati, Neon → stile esistente e nessuna regressione. Poi bump cache/versione reale.</p>
+    </div></section>
+
+    <section class="chapter searchable" id="batch"><header class="chapter-index"><span class="chapter-number">10 / 15</span><h2>Tutorial · Batch</h2><p class="chapter-summary">Conversione T2 con Codex: reference completo, tre file, stop al primo fallimento.</p></header><div class="content">
+      <h3>1. Reference e candidati reali</h3><pre><code>cd /home/clawy/dev/sth-assitec-gpt
+reference='view/modulo_verificato/pagina_t2_verificata.php'
+sed -n '1,260p' "$reference"
+printf '%s\n' 'view/modulo_a/pagina.php' 'view/modulo_b/pagina.php' \
+  'view/modulo_c/pagina.php' &gt; /tmp/sth-t2-batch-1.txt</code></pre><p>Sostituisci i placeholder con file confermati. Un nome plausibile non prova che il file esista.</p>
+      <h3>2. Baseline</h3><pre><code>git status --short
+while IFS= read -r file; do php -l "$file" || exit 1; done &lt; /tmp/sth-t2-batch-1.txt
+git rev-parse HEAD  <span class="why"># WHY: Git è il rollback, non .bak nel webroot.</span></code></pre>
+      <div class="callout warn"><strong>Niente .bak accanto al PHP</strong>Ho provato così: i mirror FTP li hanno pubblicati e hanno riempito il disco. Usa Git o una directory temporanea fuori dal webroot.</div>
+      <h3>3. Prompt batch</h3><pre><code>Read AGENTS.md, the three listed targets, and the complete reference [path].
+TASK: convert exactly these homogeneous pages to its T2 Page/Form structure.
+CONSTRAINTS: preserve behavior, bootstrap, Italian terms, queries and mysql_*.
+Tab_* remains trigger-owned. Touch no other file or protected path.
+No abstraction or cleanup.
+PROCESS: one file, checks, next file. Stop on first failure.
+VERIFY: php -l per file; diff check; markers proven by reference; behavior.
+Report a per-file matrix with command outputs.</code></pre>
+      <h3>4. Matrice di accettazione</h3><div class="table-wrap"><table><thead><tr><th>File</th><th>php -l</th><th>marker T2</th><th>comportamento</th><th>diff</th><th>Stato</th></tr></thead><tbody><tr><td>target 1</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>—</td></tr><tr><td>target 2</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>—</td></tr><tr><td>target 3</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>pass/fail</td><td>—</td></tr></tbody></table></div>
+      <pre><code>while IFS= read -r file; do
+  php -l "$file" || exit 1
+  rg -n '\$CRUD-&gt;(Page|Form)' "$file" || exit 1
+done &lt; /tmp/sth-t2-batch-1.txt
+git diff --name-only
+git diff --check
+git diff | rg '^[+-].*mysql_' || true  <span class="why"># mysql_* non è un pattern da azzerare.</span></code></pre>
+      <div class="callout danger"><strong>Mai global replace</strong>Lo stesso match testuale può significare cose diverse in lista, scheda e AJAX. Passa a 5–10 file solo dopo tre righe tutte verdi.</div>
+    </div></section>
+
+    <section class="chapter searchable" id="import"><header class="chapter-index"><span class="chapter-number">11 / 15</span><h2>Importare progetti</h2><p class="chapter-summary">In un’ora: non capire tutto, ma creare guardrail sufficienti per il primo task.</p></header><div class="content">
+      <h3>0–10 min · Inventario read-only</h3><pre><code>cd /path/assoluto/al/repo
+git status --short
+rg --files -g '!vendor' -g '!node_modules' | sed -n '1,160p'
+find .. -name AGENTS.md -print
+rg -n "require_once|mysql_|mysqli|PDO|\$CRUD-&gt;|fetch\(" --glob '*.{php,js}'</code></pre><p>Rispondi: entrypoint, bootstrap, DB, deploy, test, directory generate, segreti, URL live. Non leggere <code>.env</code> nei prompt.</p>
+      <h3>10–25 min · Estrai ciò che il repo fa</h3><p>Trova un esempio corretto per lista, form, funzione e chiamata DB. Separa convenzioni osservate da miglioramenti desiderati.</p><div class="callout warn"><strong>L’import è descrittivo</strong>Ho provato a ripulire mentre importavo: l’agente ha scambiato legacy intenzionale per debito da eliminare. Il refactor è un task futuro.</div>
+      <h3>25–40 min · Scrivi AGENTS.md</h3><pre><code># AGENTS.md — [progetto]
+## Scopo
+[Cosa fa e per chi]
+## Avvio e verifica
+- Directory: [assoluta] · Avvio: [confermato] · Test: [confermato]
+## Prima di modificare
+- Target completo + reference; git status; file in scope.
+## Convenzioni osservate
+- [bootstrap] [naming] [DB/CRUD] [dominio]
+## Vietato
+- [generated/vendor/backup/core] · niente segreti/refactor fuori task
+## Definition of Done
+- [parser/linter] · git diff --check · [test funzionale]</code></pre>
+      <h3>40–60 min · Skill se ricorre, poi prova</h3><p>Per un repo piccolo con un task basta AGENTS.md. Crea una skill solo per regole specifiche e ricorrenti.</p><pre><code>Read AGENTS.md and inspect without modifying.
+Explain bootstrap, one data flow, protected paths and exact verification commands.
+Cite paths and lines. Mark unknowns; do not guess.
+Then propose one reversible one-file task. Do not edit.</code></pre>
+      <h3>Gate riuscito</h3><ul class="checklist"><li>Entrypoint e reference citati davvero.</li><li>Zone vietate note.</li><li>Nessuna modernizzazione inventata.</li><li>Comandi di verifica esistono e passano sulla baseline.</li><li>Segreti esclusi.</li><li>Primo task cambia solo lo scope.</li></ul>
+    </div></section>
+
+    <section class="chapter searchable" id="kanban"><header class="chapter-index"><span class="chapter-number">12 / 15</span><h2>Kanban</h2><p class="chapter-summary">La memoria operativa. La chat non lo è.</p></header><div class="content">
+      <pre><code>Da fare → In corso → Verifica → Fatto
+                ↘ Bloccato</code></pre><div class="table-wrap"><table><thead><tr><th>Colonna</th><th>Entra quando</th><th>Esce quando</th></tr></thead><tbody><tr><td>Da fare</td><td>Risultato e progetto chiari</td><td>Scope e verifica definiti</td></tr><tr><td>In corso</td><td>Owner deciso</td><td>Patch pronta, statici passati</td></tr><tr><td>Verifica</td><td>Diff e prove allegati</td><td>Test funzionale accettato</td></tr><tr><td>Fatto</td><td>Definition of Done completa</td><td>—</td></tr><tr><td>Bloccato</td><td>Impedimento concreto</td><td>Owner e prossimo controllo</td></tr></tbody></table></div>
+      <h3>Card esemplare</h3><pre><code>Titolo: STH · filtro A–Z agenti usabile su mobile
+Risultato: a 320–414 px tutte le lettere sono raggiungibili e cliccabili.
+File atteso: view/agenti/agenti_lista.php
+Vincoli: solo filtro; niente Table/Header/Sidebar; zone protette.
+Verifica: php -l, diff check, test 320/375/414 px, desktop invariato.
+Deploy: non autorizzato finché la card è in Verifica.
+Log: baseline · patch/commit · output test · live (senza credenziali)</code></pre>
+      <h3>Dalla chat al board</h3><pre><code>Crea una card Kanban per [risultato]. Non iniziare.
+Inserisci progetto, comportamento attuale, risultato, file probabili come ipotesi,
+vincoli, verifiche e Definition of Done. Metti nella card le domande di scope.</code></pre><pre><code>Prendi la card [ID reale]. Spostala in In corso e fai audit read-only.
+Patcha solo se i confini restano approvati. Sposta in Verifica con diff e output.
+Non marcarla Fatto e non deployare.</code></pre>
+      <div class="callout danger"><strong>Niente ID inventati</strong>Usa il <code>--help</code> dell’integrazione installata o UI/API documentata.</div><h3>Rituale da 10 minuti</h3><ol><li>Mattina: una card, test definito, poi In corso.</li><li>Durante: decisioni e output nella card.</li><li>Prima deploy: Verifica e controllo umano.</li><li>Fine giornata: prossimo passo per ogni In corso.</li><li>Venerdì: duplicati e bloccati, senza cancellare storia utile.</li></ol><p><strong>WIP:</strong> una card per progetto, massimo due totali. Gli agenti parallelizzano; la verifica umana no.</p>
+    </div></section>
+
+    <section class="chapter searchable" id="deploy"><header class="chapter-index"><span class="chapter-number">13 / 15</span><h2>Deploy FTP</h2><p class="chapter-summary">FTP “success” è metà lavoro. Il deploy finisce sul live, dopo marker, cache e smoke test.</p></header><div class="content">
+      <h3>Preflight</h3><pre><code>git status --short
+git diff --check
+git diff --stat
+git diff --name-only -- '*.php' | while IFS= read -r f; do php -l "$f" || exit 1; done</code></pre>
+      <h3>Manifest, mai mirror cieco</h3><pre><code>assets/css/visual-styles2.css → /path/remoto/assets/css/visual-styles2.css
+index.php                    → /path/remoto/index.php</code></pre><p>Ho provato mirror ampi: includevano <code>.bak</code>, log e temporanei, riempiendo claw.nswr.it. Escludi <code>.git</code>, <code>.env</code>, <code>*.bak</code>, log, cache, node_modules e vendor non richiesti.</p>
+      <h3>Sequenza verificata</h3><ol><li>Salva checksum/mtime remoto o copia rollback fuori webroot.</li><li>Carica con nome temporaneo nella stessa directory, se supportato.</li><li>File 0644, directory 0755, segreti 0600.</li><li>Rinomina atomica o upload esplicito dal manifest.</li><li>Bump versione/cache secondo il progetto reale.</li><li>Verifica HTTP, marker/contenuto e flusso funzionale.</li><li>Conserva rollback fino allo smoke test concluso.</li></ol>
+      <pre><code><span class="why"># WHY: 200 può essere cache o una pagina errore con status sbagliato.</span>
+curl --fail --silent --show-error --location 'https://URL-REALE/pagina' \
+  -o /tmp/deploy-check.html
+<span class="why"># WHY: il marker è deciso prima del deploy.</span>
+rg -n 'MARKER_ATTESO' /tmp/deploy-check.html</code></pre>
+      <div class="table-wrap"><table><thead><tr><th>Sintomo</th><th>Controlla</th><th>Azione</th></tr></thead><tbody><tr><td>Live vecchio</td><td>Hash/marker, CDN, opcache</td><td>Bump e purge documentato</td></tr><tr><td>403 / BitNinja</td><td>Log hosting, path, estensione</td><td>Allowlist da pannello, non aggirare</td></tr><tr><td>Permission denied</td><td>Owner e directory</td><td>Owner/ACL col provider</td></tr><tr><td>Disco pieno</td><td><code>df -h</code>, <code>df -i</code>, directory</td><td>Elimina solo target confermati</td></tr></tbody></table></div>
+      <div class="callout danger"><strong>Mai chmod 777</strong>Se overwrite fallisce, controlla owner, path, BitNinja e temp+rename. Delete+put apre una finestra senza file.</div><h3>Rollback</h3><p>Se lo smoke fallisce: rimetti l’artifact precedente, ripristina versione/cache, ripeti lo stesso test e registra il fallimento nel Kanban. Mai fix improvvisati direttamente sul server.</p>
+    </div></section>
+
+    <section class="chapter searchable" id="problems"><header class="chapter-index"><span class="chapter-number">14 / 15</span><h2>Problemi comuni</h2><p class="chapter-summary">Dieci errori già abbastanza costosi da diventare regole.</p></header><div class="content">
+      <div class="problem"><span>01</span><div><h3>“Ha detto fatto”</h3><p>La patch è finita, non il test. Chiedi comandi, output e live. Se il browser non è stato aperto: “non verificato”.</p></div></div>
+      <div class="problem"><span>02</span><div><h3>File fuori scope</h3><p>Lista chiusa + <code>git diff --name-only</code>. Non fare checkout cieco: potresti cancellare lavoro tuo.</p></div></div>
+      <div class="problem"><span>03</span><div><h3>Vincoli dimenticati</h3><p>AGENTS.md + skill + vincoli ripetuti. Per T2, reference reale obbligatorio.</p></div></div>
+      <div class="problem"><span>04</span><div><h3>Batch enorme</h3><p>Tre file omogenei, matrice, stop al primo errore. Solo poi 5–10.</p></div></div>
+      <div class="problem"><span>05</span><div><h3>STH “modernizzato”</h3><p>Scrivi che <code>mysql_*</code> è shim. Niente FK fisiche; <code>Tab_*</code> non si salva dal PHP.</p></div></div>
+      <div class="problem"><span>06</span><div><h3>Venti tentativi senza diagnosi</h3><p>Audit read-only, baseline, un’ipotesi. Dopo tre fallimenti torna ai dati e riduci.</p></div></div>
+      <div class="problem"><span>07</span><div><h3>Mobile “responsive”, ma intoccabile</h3><p>320/375/414 px, target ~44×44, scroll interno e prova su iPhone.</p></div></div>
+      <div class="problem"><span>08</span><div><h3>FTP ok, live vecchio</h3><p>Manifest, marker/checksum, bump versione, curl e flusso funzionale.</p></div></div>
+      <div class="problem"><span>09</span><div><h3>Disco claw.nswr.it pieno</h3><p>Misura <code>df -h</code>/<code>df -i</code>, trova directory, escludi temp, ruota log. Mai auto-delete.</p></div></div>
+      <div class="problem"><span>10</span><div><h3>Kanban decorativo</h3><p>Card prima, output durante, Verifica prima deploy, Fatto solo dopo live.</p></div></div>
+      <div class="callout tip"><strong>Quando ricapita</strong>Non scrivere un prompt più arrabbiato. Trasforma l’errore in regola di AGENTS.md, skill o controllo automatico.</div>
+      <h3>Triage in 60 secondi</h3><pre><code>git status --short
+git diff --stat
+git diff --check
+git diff --name-only -- '*.php' | while IFS= read -r f; do php -l "$f"; done
+git diff --name-only | rg '(^|/)([^/]+_old|app|plugins)/|action/crud/functions\.php'</code></pre>
+    </div></section>
+
+    <section class="chapter searchable" id="cheat"><header class="chapter-index"><span class="chapter-number">15 / 15</span><h2>Cheat Sheet</h2><p class="chapter-summary">La pagina da tenere aperta mentre lavori.</p></header><div class="content">
+      <div class="quick-grid"><div><h4>Codex</h4><p>Patch, refactor circoscritto, batch omogeneo.</p></div><div><h4>Hermes</h4><p>Server, Telegram, cron, Kanban, deploy.</p></div><div><h4>Prima</h4><p><code>pwd</code> · <code>git status --short</code> · AGENTS.md · reference.</p></div><div><h4>Fatto</h4><p>Scope + parser + diff + funzionale + live + card.</p></div></div>
+      <h3>Prompt universale</h3><pre><code>FILE: [path esatto/lista chiusa]
+TASK: [verbo + risultato osservabile]
+INPUT: [attuale + reference reale]
+OUTPUT: [comportamento/file attesi]
+VINCOLI: [non toccare + convenzioni]
+VERIFICA: [parser + diff + test funzionale]</code></pre>
+      <h3>Prima e dopo</h3><pre><code><span class="why"># PRIMA</span>
+pwd
+git status --short
+rg --files | sed -n '1,120p'
+find .. -name AGENTS.md -print
+
+<span class="why"># DOPO</span>
+git diff --name-only
+git diff --stat
+git diff --check
+git diff
+git diff --name-only -- '*.php' | while IFS= read -r f; do php -l "$f"; done
+git diff --name-only -- '*.js' | while IFS= read -r f; do node --check "$f"; done</code></pre>
+      <h3>Guardrail STH</h3><pre><code><span class="why"># Output = STOP e review.</span>
+git diff --name-only | rg '(^|/)([^/]+_old|app|plugins)/|action/crud/functions\.php'
+rg -n 'Tab_[A-Za-z0-9_]+' --glob '*.php'
+rg -n 'mysql_' --glob '*.php'  <span class="why"># valido: non eliminare.</span></code></pre>
+      <div class="table-wrap"><table><thead><tr><th>Tipo</th><th>Pattern</th></tr></thead><tbody><tr><td>Tabella</td><td><code>plural_lowercase</code></td></tr><tr><td>PK</td><td><code>ID</code></td></tr><tr><td>FK logica</td><td><code>IDStudio</code>, <code>IDTestata</code></td></tr><tr><td>Flag</td><td><code>IS_*</code> 0/1</td></tr><tr><td>Computed</td><td><code>Tab_*</code> solo trigger</td></tr><tr><td>Lookup</td><td><code>tab_*</code></td></tr><tr><td>Child</td><td><code>{parent}_righe</code></td></tr></tbody></table></div>
+      <h3>Mobile &amp; deploy</h3><ul class="checklist"><li>320, 375, 414, 768 px.</li><li>Niente scroll orizzontale pagina.</li><li>Touch target ~44×44; swipe e tap reali.</li><li>Manifest chiuso, rollback, 0644/0755.</li><li>HTTP + marker + flusso reale; 200 da solo non basta.</li></ul>
+      <div class="callout danger"><strong>Ultima regola</strong>Mai segreti nei prompt, in <code>configure.php</code>, wiki, Git o output. Mai <code>chmod 777</code>. Mai “Fatto” senza prove.</div>
+    </div></section>
+  </main>
+  <footer class="footer"><strong>Code Wiki · Mauro / Stealth Software</strong><span>Treviso · Manuale locale, zero CDN · 2026</span></footer><a class="backtop" href="#top" aria-label="Torna in alto">↑</a>
   <script>
-  (()=>{'use strict';
-    const pages=[['Inizia','README','Start Here'],['Metodo','metodo','Il Metodo'],['Metodo','stile','Il mio stile'],['Setup','setup-hermes','Hermes'],['Setup','setup-codex','Codex'],['Setup','best-practices','Best Practices 2026'],['Setup','creating-skills','Creare skill'],['Tutorial','tutorial-fix-bug','Fix bug STH'],['Tutorial','tutorial-new-feature','Feature Insta'],['Tutorial','tutorial-batch','Batch T2'],['Operazioni','import','Importare repo'],['Operazioni','kanban','Kanban'],['Operazioni','deploy','Deploy FTP'],['Riferimento','problemi','Problemi comuni'],['Riferimento','cheatsheet','Cheat Sheet']];
-    const nav=document.querySelector('#nav'),article=document.querySelector('.doc'),aside=document.querySelector('aside'),menu=document.querySelector('.menu'),backdrop=document.querySelector('.backdrop'),search=document.querySelector('.search');
-    let group=''; pages.forEach(([g,id,label])=>{if(g!==group){group=g;const li=document.createElement('li');li.className='section';li.textContent=g;nav.append(li)}const li=document.createElement('li'),a=document.createElement('a');a.href='#/'+id;a.dataset.page=id;a.textContent=label;li.append(a);nav.append(li)});
-    const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    function inline(s){return s.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\[([^\]]+)\]\(([^)]+)\)/g,(_,t,u)=>'<a href="'+(u.endsWith('.md')?'#/'+u.slice(0,-3):u)+'">'+t+'</a>')}
-    function md(src){
-      const out=[]; let code=false,lang='',buf=[],list='',table=false,header=true;
-      const close=()=>{if(list){out.push('</'+list+'>');list=''}if(table){out.push('</tbody></table>');table=false;header=true}};
-      for(const raw of src.replace(/\r/g,'').split('\n')){
-        const isTable=raw.includes('|')&&raw.trim().startsWith('|');
-        if(table&&!isTable)close();
-        if(raw.startsWith('```')){if(code){out.push('<pre><code data-lang="'+esc(lang)+'">'+esc(buf.join('\n'))+'</code></pre>');code=false;buf=[]}else{close();code=true;lang=raw.slice(3).trim()}continue}
-        if(code){buf.push(raw);continue} if(!raw.trim()){close();continue}
-        let m;
-        if((m=raw.match(/^(#{1,3})\s+(.+)/))){close();const n=m[1].length;out.push('<h'+n+'>'+inline(m[2])+'</h'+n+'>')}
-        else if(/^---+$/.test(raw)){close();out.push('<hr>')}
-        else if((m=raw.match(/^>\s*(?:\[!(DANGER|WARNING|TIP)\]\s*)?(.*)/i))){close();out.push('<blockquote'+(m[1]?' data-kind="'+(m[1].toLowerCase()==='warning'?'warn':m[1].toLowerCase())+'"':'')+'><p>'+inline(m[2])+'</p></blockquote>')}
-        else if((m=raw.match(/^[-*]\s+(.+)/))){if(list!=='ul'){close();list='ul';out.push('<ul>')}out.push('<li>'+inline(m[1])+'</li>')}
-        else if((m=raw.match(/^\d+\.\s+(.+)/))){if(list!=='ol'){close();list='ol';out.push('<ol>')}out.push('<li>'+inline(m[1])+'</li>')}
-        else if(isTable){const cells=raw.trim().slice(1,-1).split('|').map(x=>x.trim());if(cells.every(x=>/^:?-+:?$/.test(x))){header=false;continue}if(!table){close();table=true;header=true;out.push('<table><thead>')}if(header){out.push('<tr>'+cells.map(x=>'<th>'+inline(x)+'</th>').join('')+'</tr></thead><tbody>')}else{out.push('<tr>'+cells.map(x=>'<td>'+inline(x)+'</td>').join('')+'</tr>')}}
-        else{close();out.push('<p>'+inline(raw)+'</p>')}
-      }
-      close(); return out.join('\n');
-    }
-    function toggle(open){aside.classList.toggle('open',open);backdrop.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open))}menu.addEventListener('click',()=>toggle(!aside.classList.contains('open')));backdrop.addEventListener('click',()=>toggle(false));
-    search.addEventListener('input',()=>{const q=search.value.toLowerCase();nav.querySelectorAll('a').forEach(a=>a.parentElement.hidden=!a.textContent.toLowerCase().includes(q))});
-    async function load(){const id=(location.hash.match(/^#\/([^?]+)/)||[])[1]||'README';if(!pages.some(p=>p[1]===id)){location.hash='#/README';return}nav.querySelectorAll('a').forEach(a=>a.toggleAttribute('aria-current',a.dataset.page===id));article.innerHTML='<p class="loading">Apro il quaderno…</p>';try{const r=await fetch(id+'.md',{cache:'no-store'});if(!r.ok)throw Error(r.status+' '+r.statusText);article.innerHTML=md(await r.text());document.title=(pages.find(p=>p[1]===id)||[])[2]+' · Code Wiki';scrollTo(0,0);toggle(false)}catch(e){article.innerHTML='<div class="error"><strong>Pagina non caricata.</strong><p>Avvia un server locale: <code>python3 -m http.server 8000</code>, poi apri <code>http://localhost:8000</code>.</p></div>'}}window.addEventListener('hashchange',load);load();
-  })();
+    (()=>{const body=document.body,menu=document.querySelector('#menu'),sidebar=document.querySelector('#sidebar'),search=document.querySelector('#search'),note=document.querySelector('#search-note'),chapters=[...document.querySelectorAll('.searchable')],links=[...document.querySelectorAll('#nav a')];
+      menu.addEventListener('click',()=>{const open=body.classList.toggle('nav-open');menu.setAttribute('aria-expanded',open);menu.textContent=open?'×':'☰'});
+      links.forEach(a=>a.addEventListener('click',()=>{body.classList.remove('nav-open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'}));
+      document.addEventListener('click',e=>{if(body.classList.contains('nav-open')&&!sidebar.contains(e.target)&&!menu.contains(e.target)){body.classList.remove('nav-open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'}});
+      document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();search.focus()}if(e.key==='Escape'){body.classList.remove('nav-open');search.blur()}});
+      search.addEventListener('input',()=>{const q=search.value.trim().toLocaleLowerCase('it');let count=0;chapters.forEach(c=>{const hit=!q||c.textContent.toLocaleLowerCase('it').includes(q);c.classList.toggle('hidden-search',!hit);if(hit)count++});note.textContent=q?`${count} capitoli trovati · Esc per uscire`:'⌘/Ctrl + K · cerca titoli e testo'});
+      document.querySelectorAll('pre').forEach(pre=>{const b=document.createElement('button');b.className='copy';b.type='button';b.textContent='COPIA';b.setAttribute('aria-label','Copia codice');b.onclick=async()=>{try{await navigator.clipboard.writeText(pre.innerText.replace(/COPIA$/,''));b.textContent='COPIATO';setTimeout(()=>b.textContent='COPIA',1200)}catch{b.textContent='SELEZIONA'}};pre.appendChild(b)});
+      const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -70% 0px'});chapters.forEach(c=>io.observe(c));
+    })();
   </script>
 </body>
 </html>
